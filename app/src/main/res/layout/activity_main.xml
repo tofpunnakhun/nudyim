@@ -7,7 +7,9 @@
     tools:context="com.mrdo.nudyim.MainActivity">
 
     <TextView
+        android:layout_centerInParent="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:textSize="36sp"
+        android:text="Well Come On my app"/>
 </RelativeLayout>
