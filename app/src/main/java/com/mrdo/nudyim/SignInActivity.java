@@ -82,10 +82,10 @@ public class SignInActivity extends AppCompatActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         //Result returned
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            Log.d(TAG, "result "+result.isSuccess());
             if (result.isSuccess()) {
                 Log.e(TAG, "Google Sign in success.");
                 //Google sign In was successful, authenticate with Firebase
@@ -95,8 +95,6 @@ public class SignInActivity extends AppCompatActivity implements
                 Log.e(TAG, "Google Sign In failed.");
             }
         }
-
-
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
