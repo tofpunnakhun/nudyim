@@ -1,36 +1,45 @@
 package com.mrdo.nudyim;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MainActivity extends AppCompatActivity
-implements GoogleApiClient.OnConnectionFailedListener{
+implements GoogleApiClient.OnConnectionFailedListener, NavigationView.OnNavigationItemSelectedListener{
     private static final String TAG = "MainActivity";
     private static final String ANONYMOUS = "anonymous";
-    private TextView mSignOut;
+    //private TextView mSignOut;
+
+    public CircleImageView mProfileImageView;
+    public TextView mNameTextView;
+    public TextView mEmailTextView;
 
     // Information google
     private String mUsername;
+    private String mEmail;
     private String mPhotoUrl;
 
     private GoogleApiClient mGoogleApiClient;
-
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
 
@@ -44,7 +53,14 @@ implements GoogleApiClient.OnConnectionFailedListener{
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
 
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        // End Navigation bar
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
@@ -59,6 +75,7 @@ implements GoogleApiClient.OnConnectionFailedListener{
         if (mFirebaseUser != null) {
             Log.d(TAG, "User has exist");
             mUsername = mFirebaseUser.getDisplayName();
+            mEmail = mFirebaseUser.getEmail();
             // Check photo
             if (mFirebaseUser.getPhotoUrl() != null) {
                 mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
@@ -70,21 +87,67 @@ implements GoogleApiClient.OnConnectionFailedListener{
             return;
         }
 
-        mSignOut = (TextView) findViewById(R.id.sign_out_button);
-        mSignOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mFirebaseAuth.signOut();
-                Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-                mUsername = ANONYMOUS;
-                Toast.makeText(MainActivity.this, "Sign out", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(MainActivity.this, SignInActivity.class));
-            }
-        });
+        // Initialize variable for google information
+        mProfileImageView = (CircleImageView) findViewById(R.id.profileImageView);
+        mNameTextView = (TextView)findViewById(R.id.nameTextView);
+        mEmailTextView = (TextView)findViewById(R.id.emailTextView);
+        // TODO: 10/4/2016 why this value is null
+        Log.d(TAG, "mNameTextView: "+mNameTextView);
+        mNameTextView.setText(mUsername);
+        mEmailTextView.setText(mEmail);
+        if (mFirebaseUser.getPhotoUrl() != null){
+            Glide.with(MainActivity.this)
+                    .load(mFirebaseUser.getPhotoUrl())
+                    .into(mProfileImageView);
+        }else{
+            mProfileImageView
+                    .setImageDrawable(ContextCompat
+                            .getDrawable(MainActivity.this, R.drawable.ic_account_circle_black_36dp));
+        }
+//        updateInfoToNav();
+//        mSignOut = (TextView) findViewById(R.id.sign_out_button);
+//        mSignOut.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mFirebaseAuth.signOut();
+//                Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+//                mUsername = ANONYMOUS;
+//                Toast.makeText(MainActivity.this, "Sign out", Toast.LENGTH_SHORT).show();
+//                startActivity(new Intent(MainActivity.this, SignInActivity.class));
+//            }
+//        });
     }
+
+
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)){
+            drawer.closeDrawer((GravityCompat.START));
+        }else{
+            super.onBackPressed();
+        }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.nav_logout){
+            mFirebaseAuth.signOut();
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+            mUsername = ANONYMOUS;
+            Toast.makeText(MainActivity.this, "Sign out", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(MainActivity.this, SignInActivity.class));
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
