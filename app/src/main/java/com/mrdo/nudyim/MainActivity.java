@@ -3,7 +3,10 @@ package com.mrdo.nudyim;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,6 +15,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +30,7 @@ import com.google.firebase.auth.FirebaseUser;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
-implements GoogleApiClient.OnConnectionFailedListener, NavigationView.OnNavigationItemSelectedListener{
+        implements GoogleApiClient.OnConnectionFailedListener, NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
     private static final String ANONYMOUS = "anonymous";
     //private TextView mSignOut;
@@ -38,6 +43,8 @@ implements GoogleApiClient.OnConnectionFailedListener, NavigationView.OnNavigati
     private String mUsername;
     private String mEmail;
     private String mPhotoUrl;
+
+    private FloatingActionButton mCreatedTripButton;
 
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mFirebaseAuth;
@@ -87,24 +94,25 @@ implements GoogleApiClient.OnConnectionFailedListener, NavigationView.OnNavigati
             return;
         }
 
+        CoordinatorLayout appBar = (CoordinatorLayout) findViewById(R.id.app_bar);
+        mCreatedTripButton = (FloatingActionButton)appBar.findViewById(R.id.fab_created);
+        mCreatedTripButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, "Create Trip!!", Snackbar.LENGTH_SHORT)
+                        .setAction("Action", null).show();
+            }
+        });
+
         // Initialize variable for google information
-        mProfileImageView = (CircleImageView) findViewById(R.id.profileImageView);
-        mNameTextView = (TextView)findViewById(R.id.nameTextView);
-        mEmailTextView = (TextView)findViewById(R.id.emailTextView);
-        // TODO: 10/4/2016 why this value is null
-        Log.d(TAG, "mNameTextView: "+mNameTextView);
-        mNameTextView.setText(mUsername);
-        mEmailTextView.setText(mEmail);
-        if (mFirebaseUser.getPhotoUrl() != null){
-            Glide.with(MainActivity.this)
-                    .load(mFirebaseUser.getPhotoUrl())
-                    .into(mProfileImageView);
-        }else{
-            mProfileImageView
-                    .setImageDrawable(ContextCompat
-                            .getDrawable(MainActivity.this, R.drawable.ic_account_circle_black_36dp));
-        }
-//        updateInfoToNav();
+        View headerLayout = navigationView.getHeaderView(0); //0-index header
+//       View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
+
+        mProfileImageView = (CircleImageView) headerLayout.findViewById(R.id.profileImageView);
+        mNameTextView = (TextView) headerLayout.findViewById(R.id.nameTextView);
+        mEmailTextView = (TextView) headerLayout.findViewById(R.id.emailTextView);
+
+        updateInfoToNav();
 //        mSignOut = (TextView) findViewById(R.id.sign_out_button);
 //        mSignOut.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -118,7 +126,19 @@ implements GoogleApiClient.OnConnectionFailedListener, NavigationView.OnNavigati
 //        });
     }
 
-
+    private void updateInfoToNav() {
+        mNameTextView.setText(mUsername);
+        mEmailTextView.setText(mEmail);
+        if (mFirebaseUser.getPhotoUrl() != null) {
+            Glide.with(MainActivity.this)
+                    .load(mFirebaseUser.getPhotoUrl())
+                    .into(mProfileImageView);
+        } else {
+            mProfileImageView
+                    .setImageDrawable(ContextCompat
+                            .getDrawable(MainActivity.this, R.drawable.ic_account_circle_black_36dp));
+        }
+    }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -128,9 +148,9 @@ implements GoogleApiClient.OnConnectionFailedListener, NavigationView.OnNavigati
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)){
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer((GravityCompat.START));
-        }else{
+        } else {
             super.onBackPressed();
         }
     }
@@ -138,7 +158,7 @@ implements GoogleApiClient.OnConnectionFailedListener, NavigationView.OnNavigati
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.nav_logout){
+        if (item.getItemId() == R.id.nav_logout) {
             mFirebaseAuth.signOut();
             Auth.GoogleSignInApi.signOut(mGoogleApiClient);
             mUsername = ANONYMOUS;
