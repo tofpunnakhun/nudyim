@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 /**
@@ -37,6 +38,7 @@ public class SignInActivity extends AppCompatActivity implements
 
     // Firebase instance variables
     private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
 
 
     @Override
@@ -62,6 +64,7 @@ public class SignInActivity extends AppCompatActivity implements
 
         // Initialize FirebaseAuth
         mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
     }
 
     @Override
@@ -107,6 +110,7 @@ public class SignInActivity extends AppCompatActivity implements
                             Toast.makeText(SignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }else{
+
                             startActivity(new Intent(SignInActivity.this, MainActivity.class));
                             finish();
                         }
