@@ -7,8 +7,12 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +39,7 @@ public class MainActivity extends AppCompatActivity
     private static final String ANONYMOUS = "anonymous";
     //private TextView mSignOut;
 
+    // Info on nav drawer
     public CircleImageView mProfileImageView;
     public TextView mNameTextView;
     public TextView mEmailTextView;
@@ -45,6 +50,10 @@ public class MainActivity extends AppCompatActivity
     private String mPhotoUrl;
 
     private FloatingActionButton mCreatedTripButton;
+
+    // manage tab pager
+    private FragmentPagerAdapter mPagerAdapter;
+    private ViewPager mViewPager;
 
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mFirebaseAuth;
@@ -68,6 +77,41 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         // End Navigation bar
+
+        // Create the adapter that will return a fragment for each section
+        mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+            private final Fragment[] mFragments = new Fragment[]{
+                    new ShowTripFragment(),
+                    new ShowFriendFragment()
+            };
+            private final String[] mFragmentTitle = new String[]{
+                    getString(R.string.title_trip),
+                    getString(R.string.title_friend)
+            };
+            @Override
+            public Fragment getItem(int position) {
+                return mFragments[position];
+            }
+
+            @Override
+            public int getCount() {
+                return mFragments.length;
+            }
+
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return mFragmentTitle[position];
+            }
+        };
+
+        // Set up the ViewPager with the sections adapter
+        RelativeLayout content = (RelativeLayout) findViewById(R.id.content_main);
+        mViewPager = (ViewPager)content.findViewById(R.id.container_pager);
+        mViewPager.setAdapter(mPagerAdapter);
+        TabLayout tabLayout = (TabLayout) content.findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(mViewPager);
+
+        // End new pager tab
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
