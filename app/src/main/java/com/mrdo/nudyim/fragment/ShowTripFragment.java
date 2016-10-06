@@ -18,10 +18,16 @@ import com.mrdo.nudyim.R;
 public class ShowTripFragment extends Fragment {
 
     private FloatingActionButton mCreateTripFAB;
+//    private Callback callback;
+//
+//    public interface Callback{
+//        void changePage();
+//    }
 
     @Override
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        callback = (Callback)getActivity();
     }
 
     @Override
@@ -33,12 +39,14 @@ public class ShowTripFragment extends Fragment {
         mCreateTripFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                CreateTripFragment fragment = CreateTripFragment.newInstance();
-//                getActivity().getSupportFragmentManager()
-//                        .beginTransaction()
-//                        .replace(R.id.content_main, fragment)
-//                        .commit();
-                Toast.makeText(getActivity(), "Create Event.", Toast.LENGTH_SHORT).show();
+                RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.main);
+                CreateTripFragment fragment = CreateTripFragment.newInstance();
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(content.getId(), fragment)
+                        .addToBackStack(null)
+                        .commit();
+//                callback.changePage();
             }
         });
 

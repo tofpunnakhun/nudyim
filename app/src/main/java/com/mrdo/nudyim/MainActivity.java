@@ -18,6 +18,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -30,6 +31,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mrdo.nudyim.fragment.CreateTripFragment;
 import com.mrdo.nudyim.fragment.ShowFriendFragment;
 import com.mrdo.nudyim.fragment.ShowTripFragment;
 
@@ -39,7 +41,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
-        implements GoogleApiClient.OnConnectionFailedListener, NavigationView.OnNavigationItemSelectedListener {
+        implements GoogleApiClient.OnConnectionFailedListener, NavigationView.OnNavigationItemSelectedListener{
     private static final String TAG = "MainActivity";
     private static final String ANONYMOUS = "anonymous";
     //private TextView mSignOut;
@@ -191,6 +193,7 @@ public class MainActivity extends AppCompatActivity
                             .getDrawable(MainActivity.this, R.drawable.ic_account_circle_black_36dp));
         }
     }
+
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
