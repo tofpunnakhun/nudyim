@@ -36,6 +36,5 @@
         android:id="@+id/emailTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="onepiecepura@outlook.com"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"/>
+        android:hint="onepiecepura@outlook.com" />
 </LinearLayout>

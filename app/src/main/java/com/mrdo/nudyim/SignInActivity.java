@@ -22,6 +22,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.mrdo.nudyim.model.User;
 
 /**
  * Created by onepi on 10/2/2016.
@@ -35,6 +38,8 @@ public class SignInActivity extends AppCompatActivity implements
     private SignInButton mSignInButton;
 
     private GoogleApiClient mGoogleApiClient;
+
+    private DatabaseReference mDatabaseReference;
 
     // Firebase instance variables
     private FirebaseAuth mFirebaseAuth;
@@ -62,6 +67,9 @@ public class SignInActivity extends AppCompatActivity implements
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
+        // Initialize FirebaseDatabase
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+
         // Initialize FirebaseAuth
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
@@ -88,7 +96,6 @@ public class SignInActivity extends AppCompatActivity implements
         //Result returned
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            Log.d(TAG, "result "+result.isSuccess());
             if (result.isSuccess()) {
                 Log.e(TAG, "Google Sign in success.");
                 //Google sign In was successful, authenticate with Firebase
@@ -110,13 +117,22 @@ public class SignInActivity extends AppCompatActivity implements
                             Toast.makeText(SignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }else{
-
+                            addNewUserToDatabase(task.getResult().getUser());
                             startActivity(new Intent(SignInActivity.this, MainActivity.class));
                             finish();
                         }
                     }
                 });
 
+    }
+
+    // Write into database
+    private void addNewUserToDatabase(FirebaseUser firebaseUser) {
+        User user = new User(
+                firebaseUser.getDisplayName(),
+                firebaseUser.getEmail(),
+                firebaseUser.getPhotoUrl().toString());
+        mDatabaseReference.child("user").child(firebaseUser.getUid()).setValue(user);
     }
 
     @Override

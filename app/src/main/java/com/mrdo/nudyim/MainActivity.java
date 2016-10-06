@@ -4,10 +4,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -32,6 +30,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mrdo.nudyim.fragment.ShowFriendFragment;
+import com.mrdo.nudyim.fragment.ShowTripFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        RelativeLayout content = (RelativeLayout) findViewById(R.id.content_main);
+        RelativeLayout content = (RelativeLayout) findViewById(R.id.main);
         mViewPager = (ViewPager) content.findViewById(R.id.container_pager);
         setupViewPager(mViewPager);
         mTabLayout =(TabLayout)content.findViewById(R.id.tab_layout);
@@ -121,15 +121,15 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-        CoordinatorLayout appBar = (CoordinatorLayout) findViewById(R.id.app_bar);
-        mCreatedTripButton = (FloatingActionButton)appBar.findViewById(R.id.fab_created);
-        mCreatedTripButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Snackbar.make(v, "Create Trip!!", Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
-            }
-        });
+//        CoordinatorLayout appBar = (CoordinatorLayout) findViewById(R.id.app_bar);
+//        mCreatedTripButton = (FloatingActionButton)appBar.findViewById(R.id.fab_created);
+//        mCreatedTripButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Snackbar.make(v, "Create Trip!!", Snackbar.LENGTH_SHORT)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         // Initialize variable for google information
         View headerLayout = navigationView.getHeaderView(0); //0-index header
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity
 
     private void setupViewPager(ViewPager mViewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new ShowTripFragment(), getString(R.string.title_trip));
+        adapter.addFragment(new ShowTripFragment(), getString(R.string.title_event));
         adapter.addFragment(new ShowFriendFragment(), getString(R.string.title_friend));
         mViewPager.setAdapter(adapter);
     }
@@ -177,7 +177,6 @@ public class MainActivity extends AppCompatActivity
             return mFragmentTitleList.get(position);
         }
     }
-
 
     private void updateInfoToNav() {
         mNameTextView.setText(mUsername);

@@ -14,4 +14,38 @@
         android:padding="5dp"
         android:scrollbars="vertical" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start|center_horizontal"
+        android:orientation="horizontal">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_add_friend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:src="@drawable/add_friend"/>
+
+        <EditText
+            android:id="@+id/edit_add_friend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="8dp"
+            android:hint="Add email of your friend" />
+
+        <Button
+            android:id="@+id/button_add_friend"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
+            android:layout_weight="0.2"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingTop="34dp"
+            android:textColor="@android:color/holo_red_light"
+            android:text="done"/>
+
+    </LinearLayout>
+
 </FrameLayout>

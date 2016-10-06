@@ -20,15 +20,15 @@
     </android.support.design.widget.AppBarLayout>
 
     <include
-        android:id="@+id/content_main"
+        android:id="@+id/main"
         layout="@layout/content_main"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_created"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        app:srcCompat="@android:drawable/ic_input_add"/>
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab_created"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom|end"-->
+        <!--android:layout_margin="16dp"-->
+        <!--app:srcCompat="@android:drawable/ic_input_add"/>-->
 
 </android.support.design.widget.CoordinatorLayout>
