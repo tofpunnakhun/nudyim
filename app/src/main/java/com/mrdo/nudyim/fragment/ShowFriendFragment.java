@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,13 @@ import android.widget.EditText;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mrdo.nudyim.FriendHolder;
 import com.mrdo.nudyim.R;
 import com.mrdo.nudyim.model.User;
@@ -26,9 +32,13 @@ import com.mrdo.nudyim.model.User;
  * Created by onepi on 10/5/2016.
  */
 public class ShowFriendFragment extends Fragment {
-    private static final String TAG = "ShowFriendFragment";
+    private static final String TAG = "ShowAllFriendFragment";
 
     private DatabaseReference mDatabaseReference;
+    private ValueEventListener mFriendListener;
+
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
 
     private FirebaseRecyclerAdapter<User, FriendHolder> mAdapter;
     private RecyclerView mRecycler;
@@ -38,12 +48,19 @@ public class ShowFriendFragment extends Fragment {
     private EditText mAddFriendEditText;
     private Button mAddButton;
 
-    private  static boolean mFlagAdd = true;
+    private static boolean mFlagAdd = true;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Firebase instance variables
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+    }
+
+    private String getUid() {
+        return mFirebaseUser.getUid();
     }
 
     @Override
@@ -59,8 +76,7 @@ public class ShowFriendFragment extends Fragment {
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(v, "I will make it", Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
+                checkAddFriend();
             }
         });
 
@@ -68,12 +84,11 @@ public class ShowFriendFragment extends Fragment {
         mAddFriendFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (mFlagAdd) {
                     mAddFriendEditText.setVisibility(View.VISIBLE);
                     mAddButton.setVisibility(View.VISIBLE);
                     mFlagAdd = false;
-                }else{
+                } else {
                     mAddFriendEditText.setVisibility(View.INVISIBLE);
                     mAddButton.setVisibility(View.INVISIBLE);
                     mFlagAdd = true;
@@ -88,6 +103,51 @@ public class ShowFriendFragment extends Fragment {
         mRecycler.setHasFixedSize(true);
 
         return rootView;
+    }
+
+    private void checkAddFriend() {
+        final String mEmail = mAddFriendEditText.getText().toString();
+
+        ValueEventListener friendListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot friendSnapshot : dataSnapshot.getChildren()) {
+                    User user = friendSnapshot.getValue(User.class);
+                    if (user.email.equalsIgnoreCase(mEmail)) {
+                        mDatabaseReference.child("user")
+                                .child(getUid())
+                                .child("friend")
+                                .child(friendSnapshot.getKey())
+                                .setValue(true);
+
+                        mDatabaseReference.child("user")
+                                .child(friendSnapshot.getKey())
+                                .child("friend")
+                                .child(getUid())
+                                .setValue(true);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        mDatabaseReference.child("user").addValueEventListener(friendListener);
+
+        mFriendListener = friendListener;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // Remove post value event listener
+        if (mFriendListener != null) {
+            mDatabaseReference.removeEventListener(mFriendListener);
+        }
     }
 
     @Override
@@ -105,7 +165,7 @@ public class ShowFriendFragment extends Fragment {
                 User.class,
                 R.layout.holder_show_friend,
                 FriendHolder.class,
-                mDatabaseReference.child("user")) {
+                mDatabaseReference.child("user")){
             @Override
             protected void populateViewHolder(FriendHolder viewHolder, User model, int position) {
 

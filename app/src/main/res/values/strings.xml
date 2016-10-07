@@ -4,6 +4,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_event">Events</string>
     <string name="title_friend">Friends</string>
+    <string name="title_all_user">NudYim User</string>
     <string name="menu_created">Created</string>
     <string name="date_picker_title">Picker Date</string>
 </resources>
