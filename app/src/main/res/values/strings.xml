@@ -5,4 +5,5 @@
     <string name="title_event">Events</string>
     <string name="title_friend">Friends</string>
     <string name="menu_created">Created</string>
+    <string name="date_picker_title">Picker Date</string>
 </resources>
