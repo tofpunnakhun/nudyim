@@ -41,7 +41,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener, NavigationView.OnNavigationItemSelectedListener{
-    private static final String TAG = "MainActivity";
+    public static final String TAG = "MainActivity";
     private static final String ANONYMOUS = "anonymous";
     //private TextView mSignOut;
 
