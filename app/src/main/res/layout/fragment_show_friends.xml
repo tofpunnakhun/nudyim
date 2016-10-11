@@ -9,7 +9,7 @@
         android:id="@+id/show_friend_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
+        android:layout_gravity="start"
         android:clipToPadding="false"
         android:padding="5dp"
         android:scrollbars="vertical" />

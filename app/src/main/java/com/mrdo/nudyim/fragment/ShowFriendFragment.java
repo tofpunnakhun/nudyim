@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telecom.Call;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -50,17 +52,12 @@ public class ShowFriendFragment extends Fragment {
 
     private FriendAdapter mAdapter;
     private RecyclerView mRecycler;
-    private LinearLayoutManager mLinearLayoutManager;
 
     private FloatingActionButton mAddFriendFAB;
     private EditText mAddFriendEditText;
     private Button mAddButton;
 
     private static boolean mFlagAdd = true;
-
-    interface Callback{
-        void sendUser(User user);
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -165,6 +162,11 @@ public class ShowFriendFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
 
@@ -172,6 +174,10 @@ public class ShowFriendFragment extends Fragment {
         if (mFriendListener != null) {
             mDatabaseReference.removeEventListener(mFriendListener);
         }
+
+        // Clean up comments listener
+        mAdapter.cleanupListener();
+
     }
 
     @Override
@@ -185,7 +191,6 @@ public class ShowFriendFragment extends Fragment {
         public TextView mName;
         public CircleImageView mPhotoProfileCircleView;
 
-
         public FriendViewHolder(View itemView) {
             super(itemView);
 
@@ -194,29 +199,25 @@ public class ShowFriendFragment extends Fragment {
         }
     }
 
-    private static class FriendAdapter extends RecyclerView.Adapter<FriendViewHolder> implements Callback{
+    private static class FriendAdapter extends RecyclerView.Adapter<FriendViewHolder> {
         private Context mContext;
         private DatabaseReference mReference;
         private ChildEventListener mChildEventListener;
 
         private List<String> mKeyIds = new ArrayList<>();
-        private Callback callback;
+        private List<User> mUsers = new ArrayList<>();
 
         public FriendAdapter(Context context, DatabaseReference ref) {
-            callback = this;
+
             mContext = context;
             mReference = ref;
             //Start child event listener recycler
             ChildEventListener childEventListener = new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                    Log.d(TAG, "onChildAdded: " + dataSnapshot.getKey());
-//                    Log.d(TAG, "onChildAdded dataSnapshot: " + dataSnapshot);
-
                     // A new friend has been added
-//                    mKeyIds.add(dataSnapshot.getKey());
-                    User user = getFriendFromKey(dataSnapshot.getKey());
-                    Log.d(TAG, "onChildAdded: user" + user);
+                    mKeyIds.add(dataSnapshot.getKey());
+                    getFriendFromKey(dataSnapshot.getKey());
                 }
 
                 @Override
@@ -246,21 +247,16 @@ public class ShowFriendFragment extends Fragment {
             mChildEventListener = childEventListener;
         }
 
-        private User getFriendFromKey(String key){
-
-            final User[] user = new User[1];
+        private void getFriendFromKey(String key) {
             DatabaseReference dbr = FirebaseDatabase.getInstance().getReference()
                     .child("user")
                     .child(key);
             dbr.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    callback.sendUser(dataSnapshot.getValue(User.class));
-//                    user[0] = dataSnapshot.getValue(User.class);
-//                    Log.d(TAG, "getFriendFromKey: " + user[0]);
-//                    Log.d(TAG, "getFriendFromKey: "+user[0].name);
-//                    Log.d(TAG, "getFriendFromKey: "+user[0].email);
-
+                    User user = dataSnapshot.getValue(User.class);
+                    // Add user to mUser list
+                    mUsers.add(user);
                 }
 
                 @Override
@@ -270,9 +266,6 @@ public class ShowFriendFragment extends Fragment {
                             Toast.LENGTH_SHORT).show();
                 }
             });
-//            Log.d(TAG, "getFriendFromKey: "+user[0].name);
-//            Log.d(TAG, "getFriendFromKey: "+user[0].email);
-            return user[0];
         }
 
         @Override
@@ -284,19 +277,28 @@ public class ShowFriendFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(FriendViewHolder holder, int position) {
-//            holder.mName.setText();
-//            holder.mPhotoProfileCircleView.
+            User user = mUsers.get(position);
+            holder.mName.setText(user.name);
+            if (user.photoUrl == null) {
+                holder.mPhotoProfileCircleView
+                        .setImageDrawable(ContextCompat
+                        .getDrawable(mContext, R.drawable.ic_account_circle_black_36dp));
+            }else{
+                Glide.with(mContext)
+                        .load(user.photoUrl)
+                        .into(holder.mPhotoProfileCircleView);
+            }
         }
 
         @Override
         public int getItemCount() {
-            return mKeyIds.size();
+            return mUsers.size();
         }
 
-        @Override
-        public void sendUser(User user) {
-            Log.d(TAG, "getFriendFromKey: "+user.name);
-            Log.d(TAG, "getFriendFromKey: "+user.email);
+        public void cleanupListener() {
+            if (mChildEventListener != null){
+                mReference.removeEventListener(mChildEventListener);
+            }
         }
     }
 }
