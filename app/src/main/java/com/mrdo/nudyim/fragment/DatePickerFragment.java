@@ -1,11 +1,14 @@
 package com.mrdo.nudyim.fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
@@ -20,8 +23,9 @@ import java.util.Date;
  */
 
 public class DatePickerFragment extends DialogFragment
-implements DialogInterface.OnClickListener{
-
+        implements DialogInterface.OnClickListener {
+    private static final String TAG = "DatePickerFragment";
+    protected static final String EXTRA_DATE = "EXTRA_DATE";
     protected static final String ARGUMENT_DATE = "ARG_DATE";
 
     private Calendar mCalendar;
@@ -63,10 +67,26 @@ implements DialogInterface.OnClickListener{
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-//        int day = mDatePicker.getDayOfMonth();
-//        int month = mDatePicker.getMonth();
-//        int year = mDatePicker.getYear();
-//
-//        mCalendar.set();
+        int day = mDatePicker.getDayOfMonth();
+        int month = mDatePicker.getMonth();
+        int year = mDatePicker.getYear();
+
+        mCalendar.set(Calendar.YEAR, year);
+        mCalendar.set(Calendar.MONTH, month);
+        mCalendar.set(Calendar.DAY_OF_MONTH, day);
+
+        Date date = mCalendar.getTime();
+        sendResult(Activity.RESULT_OK, date);
+
+    }
+
+    private void sendResult(int resultCode, Date date) {
+        if (getTargetFragment() == null) {
+            return;
+        }
+
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_DATE, date);
+        getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, intent);
     }
 }

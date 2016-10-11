@@ -29,6 +29,6 @@
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
         <!--android:textSize="30sp"-->
-        <!--android:text="Well come to your trip!"/>-->
+        <!--android:text="Well come to your Trip!"/>-->
 
 </RelativeLayout>

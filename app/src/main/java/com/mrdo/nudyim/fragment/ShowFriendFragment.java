@@ -134,7 +134,7 @@ public class ShowFriendFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot friendSnapshot : dataSnapshot.getChildren()) {
                     User user = friendSnapshot.getValue(User.class);
-                    if (user.email.equalsIgnoreCase(mEmail)) {
+                    if (user.getEmail().equalsIgnoreCase(mEmail)) {
                         mDatabaseReference.child("user")
                                 .child(getUid())
                                 .child("friend")
@@ -278,14 +278,14 @@ public class ShowFriendFragment extends Fragment {
         @Override
         public void onBindViewHolder(FriendViewHolder holder, int position) {
             User user = mUsers.get(position);
-            holder.mName.setText(user.name);
-            if (user.photoUrl == null) {
+            holder.mName.setText(user.getName());
+            if (user.getPhotoUrl() == null) {
                 holder.mPhotoProfileCircleView
                         .setImageDrawable(ContextCompat
                         .getDrawable(mContext, R.drawable.ic_account_circle_black_36dp));
             }else{
                 Glide.with(mContext)
-                        .load(user.photoUrl)
+                        .load(user.getPhotoUrl())
                         .into(holder.mPhotoProfileCircleView);
             }
         }

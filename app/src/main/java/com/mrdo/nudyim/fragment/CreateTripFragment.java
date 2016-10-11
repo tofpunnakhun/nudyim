@@ -1,5 +1,6 @@
 package com.mrdo.nudyim.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,10 +11,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mrdo.nudyim.R;
+import com.mrdo.nudyim.model.Trip;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,10 +28,20 @@ import java.util.Date;
 
 public class CreateTripFragment extends Fragment {
 
-    private static final int REQUEST_DATE = 9000;
+    private static final int REQUEST_START_DATE = 9000;
+    private static final int REQUEST_END_DATE = 9009;
     private static final String DIALOG_DATE = "DIALOG_DATE";
-    private TextView mStartDate;
-    private TextView mEndDate;
+
+    private EditText mTopicEditText;
+    private EditText mDetailEditText;
+    private EditText mLocationEditText;
+    private TextView mStartDateTextView;
+    private TextView mEndDateTextView;
+
+    private String mStartDateStr;
+    private String mEndDateStr;
+
+    private DatabaseReference mDatabaseReference;
 
     public static CreateTripFragment newInstance() {
         Bundle args = new Bundle();
@@ -40,6 +54,8 @@ public class CreateTripFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
     }
 
     @Override
@@ -47,28 +63,32 @@ public class CreateTripFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_create_trip, container, false);
 
-        mStartDate = (TextView) rootView.findViewById(R.id.start_date_view);
-        mStartDate.setText(toShortDate(new Date()));
-        mStartDate.setOnClickListener(new View.OnClickListener() {
+        mTopicEditText = (EditText) rootView.findViewById(R.id.topic_trip);
+        mLocationEditText = (EditText) rootView.findViewById(R.id.location_trip);
+        mDetailEditText = (EditText) rootView.findViewById(R.id.detail_trip);
+
+        mStartDateTextView = (TextView) rootView.findViewById(R.id.start_date_view);
+        mStartDateTextView.setText(toShortDate(new Date()));
+        mStartDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentManager fm = getFragmentManager();
                 DatePickerFragment datePickerFragment =
                         DatePickerFragment.newInstance(new Date());
-                datePickerFragment.setTargetFragment(CreateTripFragment.this, REQUEST_DATE);
+                datePickerFragment.setTargetFragment(CreateTripFragment.this, REQUEST_START_DATE);
                 datePickerFragment.show(fm, DIALOG_DATE);
             }
         });
 
-        mEndDate = (TextView) rootView.findViewById(R.id.end_date_view);
-        mEndDate.setText(toShortDate(new Date()));
-        mEndDate.setOnClickListener(new View.OnClickListener() {
+        mEndDateTextView = (TextView) rootView.findViewById(R.id.end_date_view);
+        mEndDateTextView.setText(toShortDate(new Date()));
+        mEndDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentManager fm = getFragmentManager();
                 DatePickerFragment datePickerFragment =
                         DatePickerFragment.newInstance(new Date());
-                datePickerFragment.setTargetFragment(CreateTripFragment.this, REQUEST_DATE);
+                datePickerFragment.setTargetFragment(CreateTripFragment.this, REQUEST_END_DATE);
                 datePickerFragment.show(fm, DIALOG_DATE);
             }
         });
@@ -80,6 +100,22 @@ public class CreateTripFragment extends Fragment {
         return new SimpleDateFormat("MMM d, yyyy").format(date);
     }
 
+    public static String toDbDate(Date date) {
+        return new SimpleDateFormat("dd/MM/yyyy").format(date);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_START_DATE) {
+            Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            mStartDateStr = toDbDate(date);
+        }
+        if (requestCode == REQUEST_END_DATE) {
+            Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            mEndDateStr = toDbDate(date);
+        }
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -89,10 +125,23 @@ public class CreateTripFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_created:
-                Toast.makeText(getActivity(), "Created", Toast.LENGTH_SHORT).show();
-            default: return super.onOptionsItemSelected(item);
+                Trip trip = bindTrip();
+                mDatabaseReference.child("trip").push().setValue(trip);
+            default:
+                return super.onOptionsItemSelected(item);
         }
+    }
+
+    private Trip bindTrip() {
+        String topic = mTopicEditText.getText().toString();
+        String startDate = mStartDateStr;
+        String endDate = mEndDateStr;
+        String location = mLocationEditText.getText().toString();
+        String details = mDetailEditText.getText().toString();
+
+        Trip trip = new Trip(topic, startDate, endDate, location, details);
+        return trip;
     }
 }

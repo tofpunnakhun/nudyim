@@ -49,7 +49,7 @@ public class ShowAllFriendFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_show_all_friend, container, false);
 
-        //[START create database reference]
+        //[START create database reference
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
         mRecycler = (RecyclerView) rootView.findViewById(R.id.show_all_friend_list);
@@ -81,15 +81,14 @@ public class ShowAllFriendFragment extends Fragment {
                 mDatabaseReference.child("user")) {
             @Override
             protected void populateViewHolder(FriendHolder viewHolder, User model, int position) {
-
-                viewHolder.mName.setText(model.name);
-                if (model.photoUrl == null) {
+                viewHolder.mName.setText(model.getName());
+                if (model.getPhotoUrl() == null) {
                     viewHolder.mPhotoProfileCircleView
                             .setImageDrawable(ContextCompat
                                     .getDrawable(getActivity(), R.drawable.ic_account_circle_black_36dp));
                 } else {
                     Glide.with(getActivity())
-                            .load(model.photoUrl)
+                            .load(model.getPhotoUrl())
                             .into(viewHolder.mPhotoProfileCircleView);
                 }
             }

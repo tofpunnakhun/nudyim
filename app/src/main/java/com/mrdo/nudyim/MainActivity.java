@@ -55,10 +55,7 @@ public class MainActivity extends AppCompatActivity
     private String mEmail;
     private String mPhotoUrl;
 
-    private FloatingActionButton mCreatedTripButton;
-
     // manage tab pager
-    private Toolbar toolbar;
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
 
@@ -121,16 +118,6 @@ public class MainActivity extends AppCompatActivity
             finish();
             return;
         }
-
-//        CoordinatorLayout appBar = (CoordinatorLayout) findViewById(R.id.app_bar);
-//        mCreatedTripButton = (FloatingActionButton)appBar.findViewById(R.id.fab_created);
-//        mCreatedTripButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Snackbar.make(v, "Create Trip!!", Snackbar.LENGTH_SHORT)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         // Initialize variable for google information
         View headerLayout = navigationView.getHeaderView(0); //0-index header

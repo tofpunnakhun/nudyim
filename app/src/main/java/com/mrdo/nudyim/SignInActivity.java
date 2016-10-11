@@ -22,8 +22,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mrdo.nudyim.model.User;
 
 /**
@@ -36,6 +39,8 @@ public class SignInActivity extends AppCompatActivity implements
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "SignInActivity";
     private SignInButton mSignInButton;
+
+    private boolean flag = false;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -113,26 +118,45 @@ public class SignInActivity extends AppCompatActivity implements
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (!task.isSuccessful()){
+                        if (!task.isSuccessful()) {
                             Toast.makeText(SignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                        }else{
+                        } else {
+                            Log.d(TAG, "onComplete: ");
                             addNewUserToDatabase(task.getResult().getUser());
                             startActivity(new Intent(SignInActivity.this, MainActivity.class));
                             finish();
                         }
                     }
                 });
-
     }
 
     // Write into database
-    private void addNewUserToDatabase(FirebaseUser firebaseUser) {
-        User user = new User(
-                firebaseUser.getDisplayName(),
-                firebaseUser.getEmail(),
-                firebaseUser.getPhotoUrl().toString());
-        mDatabaseReference.child("user").child(firebaseUser.getUid()).setValue(user);
+    private void addNewUserToDatabase(final FirebaseUser firebaseUser) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("user");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    User user = userSnapshot.getValue(User.class);
+                    if (user.getEmail().equals(firebaseUser.getEmail())) {
+                        flag = true;
+                    }
+                }
+                if (!flag){
+                   User user = new User(
+                            firebaseUser.getDisplayName(),
+                            firebaseUser.getEmail(),
+                            firebaseUser.getPhotoUrl().toString());
+                    mDatabaseReference.child("user").child(firebaseUser.getUid()).setValue(user);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
