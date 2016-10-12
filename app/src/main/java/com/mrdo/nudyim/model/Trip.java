@@ -11,6 +11,10 @@ public class Trip {
     private String location;
     private String details;
 
+    public Trip() {
+        // Default constructor Trip
+    }
+
     public Trip(String topic,
                 String startDate,
                 String endDate,

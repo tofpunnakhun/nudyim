@@ -1,29 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="wrap_content"
+    android:layout_margin="3dp">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/topic_trip"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_trip"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:src="@drawable/ic_account_circle_black_36dp" />
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Let's go to Hua Hin"
-            android:padding="@dimen/cardview_default_elevation"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/location_trip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="Hua hin"
-            android:padding="@dimen/cardview_default_elevation"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+            <TextView
+                android:id="@+id/topic_trip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/cardview_default_elevation"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                tools:text="Let's go to Hua Hin" />
+
+            <TextView
+                android:id="@+id/location_trip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/cardview_default_elevation"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                tools:text="Hua hin" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

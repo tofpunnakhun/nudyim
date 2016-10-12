@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.mrdo.nudyim.R;
 import com.mrdo.nudyim.TripHolder;
 import com.mrdo.nudyim.model.Trip;
+import com.mrdo.nudyim.model.User;
 
 /**
  * Created by onepi on 10/5/2016.
@@ -93,6 +96,15 @@ public class ShowTripFragment extends Fragment {
             protected void populateViewHolder(TripHolder viewHolder, Trip model, int position) {
                 viewHolder.mTopic.setText(model.getTopic());
                 viewHolder.mLocation.setText(model.getLocation());
+                if (mFirebaseUser.getPhotoUrl() == null) {
+                    viewHolder.mPhofileCircleImageView
+                            .setImageDrawable(ContextCompat
+                                    .getDrawable(getActivity(), R.drawable.ic_account_circle_black_36dp));
+                }else{
+                    Glide.with(getActivity())
+                            .load(mFirebaseUser.getPhotoUrl())
+                            .into(viewHolder.mPhofileCircleImageView);
+                }
             }
         };
         mRecyclerView.setAdapter(mAdapter);

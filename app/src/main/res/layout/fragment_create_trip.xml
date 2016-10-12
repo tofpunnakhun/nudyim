@@ -130,12 +130,13 @@
                 android:padding="6dp"
                 android:src="@drawable/add_friend_create" />
 
-            <EditText
+            <TextView
                 android:id="@+id/invite_trip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#00000000"
                 android:hint="Invite friends"
+                android:textSize="18dp"
                 android:padding="6dp" />
 
             <!--<AutoCompleteTextView -->

@@ -13,9 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.mrdo.nudyim.InviteFriendFragment;
 import com.mrdo.nudyim.R;
 import com.mrdo.nudyim.model.Trip;
 
@@ -37,6 +39,7 @@ public class CreateTripFragment extends Fragment {
     private EditText mLocationEditText;
     private TextView mStartDateTextView;
     private TextView mEndDateTextView;
+    private TextView mInviteFriendEditView;
 
     private String mStartDateStr;
     private String mEndDateStr;
@@ -54,7 +57,6 @@ public class CreateTripFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
     }
 
@@ -66,6 +68,15 @@ public class CreateTripFragment extends Fragment {
         mTopicEditText = (EditText) rootView.findViewById(R.id.topic_trip);
         mLocationEditText = (EditText) rootView.findViewById(R.id.location_trip);
         mDetailEditText = (EditText) rootView.findViewById(R.id.detail_trip);
+
+        mInviteFriendEditView = (TextView) rootView.findViewById(R.id.invite_trip);
+        mInviteFriendEditView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Fuck you man", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getActivity(), InviteFriendFragment.class));
+            }
+        });
 
         mStartDateTextView = (TextView) rootView.findViewById(R.id.start_date_view);
         mStartDateTextView.setText(toShortDate(new Date()));
@@ -110,10 +121,12 @@ public class CreateTripFragment extends Fragment {
         if (requestCode == REQUEST_START_DATE) {
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mStartDateStr = toDbDate(date);
+            mStartDateTextView.setText(mStartDateStr);
         }
         if (requestCode == REQUEST_END_DATE) {
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mEndDateStr = toDbDate(date);
+            mEndDateTextView.setText(mEndDateStr);
         }
     }
 
@@ -129,6 +142,7 @@ public class CreateTripFragment extends Fragment {
             case R.id.action_created:
                 Trip trip = bindTrip();
                 mDatabaseReference.child("trip").push().setValue(trip);
+                getFragmentManager().popBackStack();
             default:
                 return super.onOptionsItemSelected(item);
         }
