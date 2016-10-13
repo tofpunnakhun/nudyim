@@ -50,7 +50,6 @@ public class SignInActivity extends AppCompatActivity implements
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,7 +123,7 @@ public class SignInActivity extends AppCompatActivity implements
                         } else {
                             Log.d(TAG, "onComplete: ");
                             addNewUserToDatabase(task.getResult().getUser());
-                            startActivity(new Intent(SignInActivity.this, MainFragment.class));
+                            startActivity(new Intent(SignInActivity.this, MainActivitySingle.class));
                             finish();
                         }
                     }

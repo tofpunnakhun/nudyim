@@ -1,10 +1,10 @@
 package com.mrdo.nudyim.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -20,10 +19,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.mrdo.nudyim.CreateTripActivity;
 import com.mrdo.nudyim.R;
 import com.mrdo.nudyim.TripHolder;
 import com.mrdo.nudyim.model.Trip;
-import com.mrdo.nudyim.model.User;
 
 /**
  * Created by onepi on 10/5/2016.
@@ -63,13 +62,14 @@ public class ShowTripFragment extends Fragment {
         mCreateTripFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.main);
-                CreateTripFragment fragment = CreateTripFragment.newInstance();
-                getActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(content.getId(), fragment)
-                        .addToBackStack(null)
-                        .commit();
+//                RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.main);
+//                CreateTripActivity fragment = CreateTripActivity.newInstance();
+//                getActivity().getSupportFragmentManager()
+//                        .beginTransaction()
+//                        .replace(R.id.fragment_container, fragment) //content.getID()
+//                        .addToBackStack(null)
+//                        .commit();
+                startActivity(new Intent(getActivity(), CreateTripActivity.class));
             }
         });
 

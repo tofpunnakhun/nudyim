@@ -1,12 +1,11 @@
 package com.mrdo.nudyim.fragment;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,19 +23,34 @@ import java.util.Date;
 
 public class DatePickerFragment extends DialogFragment
         implements DialogInterface.OnClickListener {
-    private static final String TAG = "DatePickerFragment";
+    public static final String TAG = "DatePickerFragment";
     protected static final String EXTRA_DATE = "EXTRA_DATE";
     protected static final String ARGUMENT_DATE = "ARG_DATE";
+    protected static final String ARGUMENT_INT = "ARG_INT";
+
+    int requestCode;
 
     private Calendar mCalendar;
     private DatePicker mDatePicker;
 
-    public static DatePickerFragment newInstance(Date date) {
+    private Callback mCallback;
+    public interface Callback {
+        void sendValue(Date date, int request);
+    }
+
+    public static DatePickerFragment newInstance(Date date, int request) {
         Bundle args = new Bundle();
         DatePickerFragment fragment = new DatePickerFragment();
         args.putSerializable(ARGUMENT_DATE, date);
+        args.putInt(ARGUMENT_INT, request);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mCallback = (Callback)getActivity();
     }
 
     @NonNull
@@ -44,6 +58,7 @@ public class DatePickerFragment extends DialogFragment
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         Date date = (Date) getArguments().getSerializable(ARGUMENT_DATE);
+        requestCode = getArguments().getInt(ARGUMENT_INT);
 
         mCalendar = Calendar.getInstance();
         mCalendar.setTime(date);
@@ -75,18 +90,21 @@ public class DatePickerFragment extends DialogFragment
         mCalendar.set(Calendar.MONTH, month);
         mCalendar.set(Calendar.DAY_OF_MONTH, day);
 
+
         Date date = mCalendar.getTime();
-        sendResult(Activity.RESULT_OK, date);
+        Log.d(TAG, "onClick: "+date);
+        mCallback.sendValue(date, requestCode);
+//        sendResult(Activity.RESULT_OK, date);
 
     }
 
-    private void sendResult(int resultCode, Date date) {
-        if (getTargetFragment() == null) {
-            return;
-        }
-
-        Intent intent = new Intent();
-        intent.putExtra(EXTRA_DATE, date);
-        getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, intent);
-    }
+//    private void sendResult(int resultCode, Date date) {
+//        if (getTargetFragment() == null) {
+//            return;
+//        }
+//
+//        Intent intent = new Intent();
+//        intent.putExtra(EXTRA_DATE, date);
+//        getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, intent);
+//    }
 }

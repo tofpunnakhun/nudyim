@@ -115,7 +115,6 @@ public class ShowFriendFragment extends Fragment {
                 .child(getUid())
                 .child("friend");
 
-
         mRecycler = (RecyclerView) rootView.findViewById(R.id.show_friend_list);
         mRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecycler.setHasFixedSize(true);

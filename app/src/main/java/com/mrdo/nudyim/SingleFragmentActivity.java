@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
  * Created by onepi on 10/12/2016.
  */
 
-public abstract class FragmentActivity extends AppCompatActivity {
+public abstract class SingleFragmentActivity extends AppCompatActivity {
 
     @LayoutRes
     protected int getLayoutResId() {

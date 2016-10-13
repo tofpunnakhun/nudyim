@@ -15,6 +15,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -77,7 +78,7 @@ public class MainFragment extends Fragment
         super.onCreate(savedInstanceState);
 
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .enableAutoManage(getActivity() /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .enableAutoManage(getActivity() /* SingleFragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
 
@@ -107,8 +108,8 @@ public class MainFragment extends Fragment
         View rootView = inflater.inflate(R.layout.activity_main, container, false);
         getActivity().getWindow().setStatusBarColor(Color.TRANSPARENT);
 
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.drawer_layout);
-        setSupportActionBar(toolbar);
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) rootView.findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -140,7 +141,7 @@ public class MainFragment extends Fragment
     }
 
     private void setupViewPager(ViewPager mViewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new ShowTripFragment(), getString(R.string.title_event));
         adapter.addFragment(new ShowFriendFragment(), getString(R.string.title_friend));
         adapter.addFragment(new ShowAllFriendFragment(), getString(R.string.title_all_user));
@@ -216,8 +217,8 @@ public class MainFragment extends Fragment
             startActivity(new Intent(getActivity(), SignInActivity.class));
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+      //  DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 }
