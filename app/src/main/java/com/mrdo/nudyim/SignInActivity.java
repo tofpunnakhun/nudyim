@@ -124,7 +124,7 @@ public class SignInActivity extends AppCompatActivity implements
                         } else {
                             Log.d(TAG, "onComplete: ");
                             addNewUserToDatabase(task.getResult().getUser());
-                            startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                            startActivity(new Intent(SignInActivity.this, MainFragment.class));
                             finish();
                         }
                     }
