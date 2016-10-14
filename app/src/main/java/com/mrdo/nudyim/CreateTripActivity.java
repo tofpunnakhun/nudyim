@@ -45,7 +45,6 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
 
     private DatabaseReference mDatabaseReference;
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,20 +106,12 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
         return new SimpleDateFormat("dd/MM/yyyy").format(date);
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == REQUEST_START_DATE) {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 //            Date date = (Date) data.getSerializableExtra(EXTRA_DATE);
-//            mStartDateStr = toDbDate(date);
-//            mStartDateTextView.setText(mStartDateStr);
-//        }
-//        if (requestCode == REQUEST_END_DATE) {
 //            Date date = (Date) data.getSerializableExtra(EXTRA_DATE);
-//            mEndDateStr = toDbDate(date);
-//            mEndDateTextView.setText(mEndDateStr);
-//        }
-//    }
+    }
 
     @Override
     public void sendValue(Date date, int requestCode) {

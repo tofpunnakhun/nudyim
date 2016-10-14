@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,6 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +71,8 @@ public class InviteFriendActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,12 +101,13 @@ public class InviteFriendActivity extends AppCompatActivity {
     private static class InviteFriendHolder extends RecyclerView.ViewHolder {
         public TextView mName;
         public CircleImageView mProfileCircleImageView;
+        public AppCompatCheckBox mInviteCheckBox;
 
         public InviteFriendHolder(View itemView) {
             super(itemView);
-
             mName = (TextView) itemView.findViewById(R.id.name_profile);
             mProfileCircleImageView = (CircleImageView) itemView.findViewById(R.id.friend_profile);
+            mInviteCheckBox = (AppCompatCheckBox) itemView.findViewById(R.id.checkbox_invite);
         }
     }
 
@@ -174,12 +180,13 @@ public class InviteFriendActivity extends AppCompatActivity {
         @Override
         public InviteFriendHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            View view = inflater.inflate(R.layout.holder_show_friend,parent,false);
+            View view = inflater.inflate(R.layout.holder_invite_friend,parent,false);
             return new InviteFriendHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(InviteFriendHolder holder, int position) {
+        public void onBindViewHolder(InviteFriendHolder holder, final int position) {
+
             User user = mUsers.get(position);
             holder.mName.setText(user.getName());
             if (user.getPhotoUrl() == null) {
@@ -191,6 +198,15 @@ public class InviteFriendActivity extends AppCompatActivity {
                         .load(user.getPhotoUrl())
                         .into(holder.mProfileCircleImageView);
             }
+
+            holder.mInviteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked){
+                          mKeyId.get(position);
+                    }
+                }
+            });
         }
 
         @Override

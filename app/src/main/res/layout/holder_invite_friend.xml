@@ -10,6 +10,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/checkbox_invite"
+            android:padding="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/friend_profile"
             android:layout_width="36dp"
