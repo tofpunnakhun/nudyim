@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -44,11 +47,34 @@ public class InviteFriendActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private InviteFriendAdapter mInviteFriendAdapter;
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mInviteFriendAdapter.cleanupListener();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.done_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_done:
+                finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_invite_friend);
+
+        getSupportActionBar().setTitle(CreateTripActivity.EMPTY_STRING);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_cancel);
 
         mFirebaseAuth = mFirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
@@ -60,6 +86,11 @@ public class InviteFriendActivity extends AppCompatActivity {
                 .child("friend");
 
         mRecyclerView = (RecyclerView) findViewById(R.id.invite_friend_list);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setHasFixedSize(true);
+
+        mInviteFriendAdapter = new InviteFriendAdapter(this, mFriendReference);
+        mRecyclerView.setAdapter(mInviteFriendAdapter);
     }
 
     private static class InviteFriendHolder extends RecyclerView.ViewHolder {
@@ -77,7 +108,6 @@ public class InviteFriendActivity extends AppCompatActivity {
     private static class InviteFriendAdapter extends RecyclerView.Adapter<InviteFriendHolder> {
 
         private static final String TAG = "InviteFriendAdapter";
-        private ChildEventListener mChildEventListener;
 
         private Context mContext;
         private DatabaseReference mReference;
@@ -166,6 +196,12 @@ public class InviteFriendActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
             return mUsers.size();
+        }
+
+        public void cleanupListener() {
+            if (mChildEventListener != null){
+                mReference.removeEventListener(mChildEventListener);
+            }
         }
     }
 }

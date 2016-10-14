@@ -38,7 +38,7 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
     private TextView mEndDateTextView;
     private TextView mInviteFriendTextView;
 
-    private static final String EMPTY_STRING = "";
+    public static final String EMPTY_STRING = "";
 
     private String mStartDateStr;
     private String mEndDateStr;
@@ -136,7 +136,7 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.cancel_menu, menu);
         return true;
     }
 

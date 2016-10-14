@@ -21,7 +21,8 @@
         <activity android:name=".SignInActivity"/>
         <activity android:name=".CreateTripActivity"
             android:parentActivityName=".MainActivitySingle"/>
-        <activity android:name=".InviteFriendActivity"/>
+        <activity android:name=".InviteFriendActivity"
+            android:parentActivityName=".CreateTripActivity"/>
 
     </application>
 

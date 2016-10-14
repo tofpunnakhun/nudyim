@@ -7,4 +7,5 @@
     <string name="title_all_user">NudYim User</string>
     <string name="menu_created">Created</string>
     <string name="date_picker_title">Picker Date</string>
+    <string name="menu_done">Done</string>
 </resources>
