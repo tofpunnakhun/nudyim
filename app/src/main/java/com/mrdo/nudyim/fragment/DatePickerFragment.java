@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
 
+import com.mrdo.nudyim.CreateTripActivity;
 import com.mrdo.nudyim.R;
 
 import java.util.Calendar;
@@ -24,7 +25,7 @@ import java.util.Date;
 public class DatePickerFragment extends DialogFragment
         implements DialogInterface.OnClickListener {
     public static final String TAG = "DatePickerFragment";
-    protected static final String EXTRA_DATE = "EXTRA_DATE";
+
     protected static final String ARGUMENT_DATE = "ARG_DATE";
     protected static final String ARGUMENT_INT = "ARG_INT";
 
@@ -66,9 +67,7 @@ public class DatePickerFragment extends DialogFragment
         int month = mCalendar.get(Calendar.MONTH);
         int day = mCalendar.get(Calendar.DAY_OF_MONTH);
 
-        View v = LayoutInflater.from(getActivity())
-                .inflate(R.layout.dialog_date, null);
-
+        View v = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_date, null);
         mDatePicker = (DatePicker) v.findViewById(R.id.date_picker);
         mDatePicker.init(year, month, day, null);
 

@@ -1,33 +1,25 @@
 package com.mrdo.nudyim;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.mrdo.nudyim.model.User;
 
 import java.util.ArrayList;
@@ -41,20 +33,18 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class InviteFriendActivity extends AppCompatActivity {
 
+    private static final String TAG = "InviteFriendActivity" ;
+    public static final String INVITE_VALUE = "INVITE_VALUE";
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
 
     private DatabaseReference mDatabaseReference;
-    private DatabaseReference mFriendReference;
 
+    private FirebaseRecyclerAdapter<User, InviteFriendHolder> mAdapter;
     private RecyclerView mRecyclerView;
-    private InviteFriendAdapter mInviteFriendAdapter;
+    private LinearLayoutManager mLinearLayoutManager;
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mInviteFriendAdapter.cleanupListener();
-    }
+    private List<String> inviteCheckboxList;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -64,38 +54,92 @@ public class InviteFriendActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_done:
+                Log.d(TAG, "inviteCheckboxList: "+inviteCheckboxList);
+                Intent intent = new Intent();
+                intent.putStringArrayListExtra(INVITE_VALUE, (ArrayList<String>) inviteCheckboxList);
+                setResult(RESULT_OK, intent);
                 finish();
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
 
+        mLinearLayoutManager = new LinearLayoutManager(this);
+        mLinearLayoutManager.setReverseLayout(true);
+        mLinearLayoutManager.setStackFromEnd(true);
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+
+        inviteCheckboxList = new ArrayList<>();
+
+        mAdapter = new FirebaseRecyclerAdapter<User, InviteFriendHolder>(
+                User.class,
+                R.layout.holder_invite_friend,
+                InviteFriendHolder.class,
+                mDatabaseReference.child("user").child(getUid()).child("friend")) {
+            @Override
+            protected void populateViewHolder(InviteFriendHolder viewHolder, User model, int position) {
+
+                final DatabaseReference ref = getRef(position);
+
+                viewHolder.mName.setText(model.getName());
+                if (model.getPhotoUrl() == null) {
+                    viewHolder.mProfileCircleImageView
+                            .setImageDrawable(ContextCompat
+                                    .getDrawable(InviteFriendActivity.this, R.drawable.ic_account_circle_black_36dp));
+                } else {
+                    Glide.with(InviteFriendActivity.this)
+                            .load(model.getPhotoUrl())
+                            .into(viewHolder.mProfileCircleImageView);
+                }
+                viewHolder.mInviteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+                            inviteCheckboxList.add(ref.getKey());
+                            Log.d(TAG, "onCheckedChanged add: "+inviteCheckboxList);
+                        }else{
+                            //isChecked = false
+                            inviteCheckboxList.remove(ref.getKey());
+                            Log.d(TAG, "onCheckedChanged remove: "+inviteCheckboxList);
+                        }
+                    }
+                });
+            }
+        };
+        mRecyclerView.setAdapter(mAdapter);
+
+    }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onStop() {
+        super.onStop();
+    }
+
+    private String getUid() {
+        return mFirebaseUser.getUid();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_invite_friend);
 
         getSupportActionBar().setTitle(CreateTripActivity.EMPTY_STRING);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_cancel);
+//        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_cancel);
 
         mFirebaseAuth = mFirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
-        mFriendReference = FirebaseDatabase.getInstance().getReference()
-                .child("user")
-                .child(mFirebaseUser.getUid())
-                .child("friend");
 
         mRecyclerView = (RecyclerView) findViewById(R.id.invite_friend_list);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setHasFixedSize(true);
 
-        mInviteFriendAdapter = new InviteFriendAdapter(this, mFriendReference);
-        mRecyclerView.setAdapter(mInviteFriendAdapter);
     }
 
     private static class InviteFriendHolder extends RecyclerView.ViewHolder {
@@ -111,7 +155,7 @@ public class InviteFriendActivity extends AppCompatActivity {
         }
     }
 
-    private static class InviteFriendAdapter extends RecyclerView.Adapter<InviteFriendHolder> {
+   /* private static class InviteFriendAdapter extends RecyclerView.Adapter<InviteFriendHolder> {
 
         private static final String TAG = "InviteFriendAdapter";
 
@@ -219,5 +263,5 @@ public class InviteFriendActivity extends AppCompatActivity {
                 mReference.removeEventListener(mChildEventListener);
             }
         }
-    }
+    }*/
 }

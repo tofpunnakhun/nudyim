@@ -1,5 +1,7 @@
 package com.mrdo.nudyim.model;
 
+import java.util.List;
+
 /**
  * Created by Chaiwat on 10/11/2016.
  */

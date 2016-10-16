@@ -42,15 +42,15 @@ public class ShowAllFriendFragment extends Fragment {
         // Firebase instance variables
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
+
+        //[START create database reference
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_show_all_friend, container, false);
-
-        //[START create database reference
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
         mRecycler = (RecyclerView) rootView.findViewById(R.id.show_all_friend_list);
         mRecycler.setHasFixedSize(true);

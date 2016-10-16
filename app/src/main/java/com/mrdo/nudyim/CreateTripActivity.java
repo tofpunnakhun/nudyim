@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +18,9 @@ import com.mrdo.nudyim.fragment.DatePickerFragment;
 import com.mrdo.nudyim.model.Trip;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by onepi on 10/6/2016.
@@ -28,8 +31,9 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
     private static final int REQUEST_START_DATE = 9000;
     private static final int REQUEST_END_DATE = 9009;
 
-    protected static final String EXTRA_DATE = "EXTRA_DATE";
     private static final String DIALOG_DATE = "DIALOG_DATE";
+    private static final int REQUEST_CODE = 1189;
+    private static final String TAG = "CreateTripActivity";
 
     private EditText mTopicEditText;
     private EditText mDetailEditText;
@@ -37,6 +41,8 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
     private TextView mStartDateTextView;
     private TextView mEndDateTextView;
     private TextView mInviteFriendTextView;
+
+    private List<String> mFriendLists = new ArrayList<>();
 
     public static final String EMPTY_STRING = "";
 
@@ -67,7 +73,8 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
         mInviteFriendTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent((CreateTripActivity.this), InviteFriendActivity.class));
+                Intent i = new Intent(CreateTripActivity.this, InviteFriendActivity.class);
+                startActivityForResult(i, REQUEST_CODE);
             }
         });
 
@@ -109,8 +116,12 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//            Date date = (Date) data.getSerializableExtra(EXTRA_DATE);
-//            Date date = (Date) data.getSerializableExtra(EXTRA_DATE);
+        if (requestCode == REQUEST_CODE){
+            if (resultCode == RESULT_OK){
+                mFriendLists = data.getStringArrayListExtra(InviteFriendActivity.INVITE_VALUE);
+                Log.d(TAG, "onActivityResult List: "+mFriendLists);
+            }
+        }
     }
 
     @Override
@@ -136,11 +147,24 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
         switch (item.getItemId()) {
             case R.id.action_created:
                 Trip trip = bindTrip();
-                mDatabaseReference.child("trip").push().setValue(trip);
+                String key = mDatabaseReference.child("trip").push().getKey();
+                mDatabaseReference.child("trip").child(key).setValue(trip);
+                inviteFriendToDb(key);
                 finish();
 //                getFragmentManager().popBackStack();
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void inviteFriendToDb(String key) {
+        for (int i =0;i < mFriendLists.size();i++){
+            mDatabaseReference
+                    .child("trip")
+                    .child(key)
+                    .child("friend")
+                    .child(mFriendLists.get(i))
+                    .setValue(true);
         }
     }
 
