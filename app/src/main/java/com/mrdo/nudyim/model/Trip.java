@@ -1,7 +1,5 @@
 package com.mrdo.nudyim.model;
 
-import java.util.List;
-
 /**
  * Created by Chaiwat on 10/11/2016.
  */
@@ -12,6 +10,7 @@ public class Trip {
     private String endDate;
     private String location;
     private String details;
+    private String photoUrl;
 
     public Trip() {
         // Default constructor Trip
@@ -21,12 +20,22 @@ public class Trip {
                 String startDate,
                 String endDate,
                 String location,
-                String details) {
+                String details,
+                String photoUrl) {
         this.topic = topic;
         this.startDate = startDate;
         this.endDate = endDate;
         this.location = location;
         this.details = details;
+        this.photoUrl = photoUrl;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     public String getTopic() {

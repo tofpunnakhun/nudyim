@@ -15,6 +15,7 @@
             android:layout_height="wrap_content"
             android:padding="2dp"
             android:text="All Friends"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
             android:textAppearance="@style/Base.TextAppearance.Widget.AppCompat.Toolbar.Title" />
 
         <android.support.v7.widget.RecyclerView

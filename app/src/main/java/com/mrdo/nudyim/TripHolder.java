@@ -14,6 +14,7 @@ public class TripHolder extends RecyclerView.ViewHolder {
     public TextView mTopic;
     public TextView mLocation;
     public CircleImageView mPhofileCircleImageView;
+
     public TripHolder(View itemView) {
         super(itemView);
         mTopic = (TextView) itemView.findViewById(R.id.topic_trip);

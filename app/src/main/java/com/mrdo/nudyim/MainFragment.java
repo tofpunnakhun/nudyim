@@ -88,6 +88,7 @@ public class MainFragment extends Fragment
 
         // Check user login with google
         if (mFirebaseUser != null) {
+            Log.d(TAG, "onCreate: ");
             mUsername = mFirebaseUser.getDisplayName();
             mEmail = mFirebaseUser.getEmail();
             // Check photo
@@ -95,6 +96,7 @@ public class MainFragment extends Fragment
                 mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
             }
         } else {
+            Log.d(TAG, "onCreate startActivity: ");
             startActivity(new Intent(getActivity(), SignInActivity.class));
             getActivity().finish();
             return;

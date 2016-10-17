@@ -96,13 +96,13 @@ public class ShowTripFragment extends Fragment {
             protected void populateViewHolder(TripHolder viewHolder, Trip model, int position) {
                 viewHolder.mTopic.setText(model.getTopic());
                 viewHolder.mLocation.setText(model.getLocation());
-                if (mFirebaseUser.getPhotoUrl() == null) {
+                if (model.getPhotoUrl() == null) {
                     viewHolder.mPhofileCircleImageView
                             .setImageDrawable(ContextCompat
                                     .getDrawable(getActivity(), R.drawable.ic_account_circle_black_36dp));
                 }else{
                     Glide.with(getActivity())
-                            .load(mFirebaseUser.getPhotoUrl())
+                            .load(model.getPhotoUrl())
                             .into(viewHolder.mPhofileCircleImageView);
                 }
             }

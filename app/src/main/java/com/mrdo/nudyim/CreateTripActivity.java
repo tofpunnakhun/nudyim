@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mrdo.nudyim.fragment.DatePickerFragment;
@@ -49,12 +51,19 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
     private String mStartDateStr;
     private String mEndDateStr;
 
+
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
     private DatabaseReference mDatabaseReference;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_create_trip);
+
+        // Initialize firebase auth
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
         getSupportActionBar().setTitle(EMPTY_STRING);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_cancel);
@@ -174,8 +183,9 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
         String endDate = mEndDateStr;
         String location = mLocationEditText.getText().toString();
         String details = mDetailEditText.getText().toString();
+        String photoUrl = mFirebaseUser.getPhotoUrl().toString();
 
-        Trip trip = new Trip(topic, startDate, endDate, location, details);
+        Trip trip = new Trip(topic, startDate, endDate, location, details, photoUrl);
         return trip;
     }
 }
