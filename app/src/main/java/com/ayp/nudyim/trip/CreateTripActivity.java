@@ -171,7 +171,7 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
             mDatabaseReference
                     .child("trip")
                     .child(key)
-                    .child("friend")
+                    .child("member")
                     .child(mFriendLists.get(i))
                     .setValue(true);
         }

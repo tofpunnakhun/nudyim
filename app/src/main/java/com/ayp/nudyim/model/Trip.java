@@ -6,8 +6,8 @@ package com.ayp.nudyim.model;
 
 public class Trip {
     private String topic;
-    private String startDate;
-    private String endDate;
+    private String startdate;
+    private String enddate;
     private String location;
     private String details;
     private String photoUrl;
@@ -17,24 +17,16 @@ public class Trip {
     }
 
     public Trip(String topic,
-                String startDate,
-                String endDate,
+                String startdate,
+                String enddate,
                 String location,
                 String details,
                 String photoUrl) {
         this.topic = topic;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.startdate = startdate;
+        this.enddate = enddate;
         this.location = location;
         this.details = details;
-        this.photoUrl = photoUrl;
-    }
-
-    public String getPhotoUrl() {
-        return photoUrl;
-    }
-
-    public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
     }
 
@@ -46,20 +38,20 @@ public class Trip {
         this.topic = topic;
     }
 
-    public String getStartDate() {
-        return startDate;
+    public String getStartdate() {
+        return startdate;
     }
 
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
+    public void setStartdate(String startdate) {
+        this.startdate = startdate;
     }
 
-    public String getEndDate() {
-        return endDate;
+    public String getEnddate() {
+        return enddate;
     }
 
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
+    public void setEnddate(String enddate) {
+        this.enddate = enddate;
     }
 
     public String getLocation() {
@@ -76,5 +68,13 @@ public class Trip {
 
     public void setDetails(String details) {
         this.details = details;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 }
