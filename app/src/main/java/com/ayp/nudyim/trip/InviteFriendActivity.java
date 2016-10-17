@@ -1,4 +1,4 @@
-package com.mrdo.nudyim;
+package com.ayp.nudyim.trip;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,13 +14,14 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.ayp.nudyim.R;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.mrdo.nudyim.model.User;
+import com.ayp.nudyim.model.User;
 
 import java.util.ArrayList;
 import java.util.List;

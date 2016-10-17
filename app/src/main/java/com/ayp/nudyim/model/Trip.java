@@ -1,4 +1,4 @@
-package com.mrdo.nudyim.model;
+package com.ayp.nudyim.model;
 
 /**
  * Created by Chaiwat on 10/11/2016.

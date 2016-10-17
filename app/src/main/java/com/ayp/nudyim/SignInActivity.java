@@ -1,4 +1,4 @@
-package com.mrdo.nudyim;
+package com.ayp.nudyim;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,7 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.mrdo.nudyim.model.User;
+import com.ayp.nudyim.model.User;
 
 /**
  * Created by onepi on 10/2/2016.

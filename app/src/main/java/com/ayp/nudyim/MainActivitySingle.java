@@ -1,4 +1,4 @@
-package com.mrdo.nudyim;
+package com.ayp.nudyim;
 
 import android.support.v4.app.Fragment;
 

@@ -1,4 +1,4 @@
-package com.mrdo.nudyim.fragment;
+package com.ayp.nudyim.friend;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -25,8 +25,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.mrdo.nudyim.R;
-import com.mrdo.nudyim.model.User;
+import com.ayp.nudyim.R;
+import com.ayp.nudyim.model.User;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 

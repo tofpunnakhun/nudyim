@@ -1,15 +1,15 @@
-package com.mrdo.nudyim;
+package com.ayp.nudyim.friend;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+import com.ayp.nudyim.R;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Created by Chaiwat on 10/5/2016.
  */
-
 public class FriendHolder extends RecyclerView.ViewHolder {
     public TextView mName;
     public CircleImageView mPhotoProfileCircleView;

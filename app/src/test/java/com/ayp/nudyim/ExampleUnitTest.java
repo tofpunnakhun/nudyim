@@ -1,4 +1,4 @@
-package com.mrdo.nudyim;
+package com.ayp.nudyim;
 
 import org.junit.Test;
 

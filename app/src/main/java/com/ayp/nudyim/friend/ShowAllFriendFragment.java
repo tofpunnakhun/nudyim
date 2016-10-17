@@ -1,4 +1,4 @@
-package com.mrdo.nudyim.fragment;
+package com.ayp.nudyim.friend;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,9 +16,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.mrdo.nudyim.FriendHolder;
-import com.mrdo.nudyim.R;
-import com.mrdo.nudyim.model.User;
+import com.ayp.nudyim.R;
+import com.ayp.nudyim.model.User;
 
 /**
  * Created by onepi on 10/5/2016.

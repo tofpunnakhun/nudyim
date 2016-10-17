@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mrdo.nudyim">
+    package="com.ayp.nudyim">
 
     <application
         android:allowBackup="true"
@@ -19,9 +19,9 @@
         </activity>
 
         <activity android:name=".SignInActivity"/>
-        <activity android:name=".CreateTripActivity"
+        <activity android:name=".trip.CreateTripActivity"
             android:parentActivityName=".MainActivitySingle"/>
-        <activity android:name=".InviteFriendActivity"/>
+        <activity android:name=".trip.InviteFriendActivity"/>
 
     </application>
 

@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "554532688357-0rnplb4qup155umsocb3ukjlps1556jq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mrdo.nudyim",
+            "certificate_hash": "753DE8215DF50346AEC93B8D6969C436ED807C40"
+          }
+        },
+        {
           "client_id": "554532688357-73q5bhr3r42i40b14uhor9dqs0r4brhu.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -44,6 +52,37 @@
               "client_type": 3
             }
           ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:554532688357:android:d3ef5d43987cc6ea",
+        "android_client_info": {
+          "package_name": "com.ayp.nudyim"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "554532688357-eaj21n3d182q58dmefcndgdh1aj47ik4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcop4N7ItO67Wvmws1-N__8emqb7c33zw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

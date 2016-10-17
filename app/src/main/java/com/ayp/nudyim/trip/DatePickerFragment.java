@@ -1,4 +1,4 @@
-package com.mrdo.nudyim.fragment;
+package com.ayp.nudyim.trip;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -12,8 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
 
-import com.mrdo.nudyim.CreateTripActivity;
-import com.mrdo.nudyim.R;
+import com.ayp.nudyim.R;
 
 import java.util.Calendar;
 import java.util.Date;

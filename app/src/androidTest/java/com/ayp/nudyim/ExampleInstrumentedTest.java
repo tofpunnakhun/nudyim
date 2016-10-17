@@ -1,4 +1,4 @@
-package com.mrdo.nudyim;
+package com.ayp.nudyim;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

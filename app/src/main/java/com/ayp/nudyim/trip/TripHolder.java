@@ -1,8 +1,10 @@
-package com.mrdo.nudyim;
+package com.ayp.nudyim.trip;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import com.ayp.nudyim.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 

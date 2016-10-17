@@ -1,4 +1,4 @@
-package com.mrdo.nudyim;
+package com.ayp.nudyim;
 
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;

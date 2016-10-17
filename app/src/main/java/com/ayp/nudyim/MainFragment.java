@@ -1,4 +1,4 @@
-package com.mrdo.nudyim;
+package com.ayp.nudyim;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -32,9 +31,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mrdo.nudyim.fragment.ShowAllFriendFragment;
-import com.mrdo.nudyim.fragment.ShowFriendFragment;
-import com.mrdo.nudyim.fragment.ShowTripFragment;
+import com.ayp.nudyim.friend.ShowAllFriendFragment;
+import com.ayp.nudyim.friend.ShowFriendFragment;
+import com.ayp.nudyim.trip.ShowTripFragment;
 
 import java.util.ArrayList;
 import java.util.List;
