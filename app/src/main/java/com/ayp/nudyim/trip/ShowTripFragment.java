@@ -8,10 +8,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.ayp.nudyim.TripActivity;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -93,6 +96,7 @@ public class ShowTripFragment extends Fragment {
                 mDatabaseReference.child("trip")) {
             @Override
             protected void populateViewHolder(TripHolder viewHolder, Trip model, int position) {
+                final DatabaseReference ref = getRef(position);
                 viewHolder.mTopic.setText(model.getTopic());
                 viewHolder.mLocation.setText(model.getLocation());
                 if (model.getPhotoUrl() == null) {
@@ -104,6 +108,17 @@ public class ShowTripFragment extends Fragment {
                             .load(model.getPhotoUrl())
                             .into(viewHolder.mPhofileCircleImageView);
                 }
+
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), TripActivity.class);
+                        intent.putExtra("KEY_CHILD", ref.getKey());
+                        getActivity().startActivity(intent);
+//                        Toast.makeText(getActivity(), ref.getKey(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
             }
         };
         mRecyclerView.setAdapter(mAdapter);

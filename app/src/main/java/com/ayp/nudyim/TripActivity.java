@@ -1,25 +1,25 @@
 package com.ayp.nudyim;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.view.MenuItem;
 
+import com.ayp.nudyim.trip.TripFragment;
 import com.google.android.gms.common.ConnectionResult;
 
 /**
- * Created by onepi on 10/13/2016.
+ * Created by Punnakhun on 10/18/2016.
  */
 
-public class MainActivitySingle extends SingleFragmentActivity {
-    @Override
-    protected Fragment onCreateFragment() {
-        return MainFragment.newInstance();
-    }
+public class TripActivity extends SingleFragmentActivity{
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
+    protected Fragment onCreateFragment() {
+        Intent intent = getIntent();
+        String Key = intent.getStringExtra("KEY_CHILD");
+        return TripFragment.newInstance(Key);
     }
+
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {

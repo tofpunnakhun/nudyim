@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
+
+    <TextView
+        android:id="@+id/text_balance"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Balance"
+        android:textSize="30dp"
+        android:textColor="@color/colorBudget"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        />
+    <TextView
+        android:id="@+id/wallet_balance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_balance"
+        android:text="0"
+        android:textSize="30dp"
+        style="?android:listSeparatorTextViewStyle"/>
+
+    <TextView
+        android:id="@+id/text_income"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/wallet_balance"
+        android:text="Incomes"
+        android:textSize="25dp"
+        android:textColor="@color/colorPicture"
+        android:textStyle="bold" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/budgetIncomeRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_income"/>
+    <TextView
+        android:id="@+id/text_outcome"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/budgetIncomeRecyclerView"
+        android:text="Expenses"
+        android:textSize="25dp"
+        android:textColor="@color/colorRed"
+        android:textStyle="bold" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/budgetOutcomeRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_outcome"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floating_button"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@android:drawable/ic_menu_edit"
+        />
+</RelativeLayout>
