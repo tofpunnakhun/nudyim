@@ -13,11 +13,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ayp.nudyim.R;
+import com.ayp.nudyim.model.User;
+import com.ayp.nudyim.model.UserTrip;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.ayp.nudyim.model.Trip;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,6 +60,8 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
     private DatabaseReference mDatabaseReference;
+    private String mEmail;
+    private String mUserKey;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +71,7 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
         // Initialize firebase auth
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        mEmail = mFirebaseUser.getEmail();
 
         getSupportActionBar().setTitle(EMPTY_STRING);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_cancel);
@@ -112,7 +120,24 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
                 datePickerFragment.show(fm, DIALOG_DATE);
             }
         });
-        }
+
+        mDatabaseReference.child("user").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    User userLab = postSnapshot.getValue(User.class);
+                    if (userLab.getEmail().equals(mEmail))
+                    {
+                        mUserKey = postSnapshot.getKey();
+                        Log.d("Test", "Key user = " + mUserKey);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
 
     public static String toShortDate(Date date) {
         return new SimpleDateFormat("MMM d, yyyy").format(date);
@@ -174,7 +199,23 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
                     .child("member")
                     .child(mFriendLists.get(i))
                     .setValue(true);
+
+            UserTrip usertrip = new UserTrip(key);
+
+            mDatabaseReference
+                    .child("user")
+                    .child(mFriendLists.get(i))
+                    .child("trip")
+                    .child(key)
+                    .setValue(usertrip);
         }
+        UserTrip userTrip = new UserTrip(key);
+        mDatabaseReference
+                .child("user")
+                .child(mUserKey)
+                .child("trip")
+                .child(key)
+                .setValue(userTrip);
     }
 
     private Trip bindTrip() {

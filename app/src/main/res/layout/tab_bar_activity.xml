@@ -13,9 +13,9 @@
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:tabMode="fixed"
+            app:tabMode="scrollable"
             app:tabBackground="@drawable/tab_color_selection"
             app:tabTextColor="@drawable/tab_color_text_change"
             app:tabIndicatorColor="@color/colorSchedule"
