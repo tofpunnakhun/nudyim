@@ -22,7 +22,16 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.ayp.nudyim.model.User;
+import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +45,7 @@ public class InviteFriendActivity extends AppCompatActivity {
 
     private static final String TAG = "InviteFriendActivity" ;
     public static final String INVITE_VALUE = "INVITE_VALUE";
+
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
 
@@ -60,7 +70,6 @@ public class InviteFriendActivity extends AppCompatActivity {
                 Log.d(TAG, "inviteCheckboxList: "+inviteCheckboxList);
                 Intent intent = new Intent();
                 intent.putStringArrayListExtra(INVITE_VALUE, (ArrayList<String>) inviteCheckboxList);
-                setResult(RESULT_OK, intent);
                 finish();
         }
         return super.onOptionsItemSelected(item);
