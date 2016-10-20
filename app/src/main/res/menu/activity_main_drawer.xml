@@ -5,5 +5,8 @@
             android:id="@+id/nav_logout"
             android:icon="@android:drawable/ic_menu_close_clear_cancel"
             android:title="Logout" />
+        <item android:id="@+id/nav_show_all_friend"
+            android:icon="@android:drawable/ic_menu_my_calendar"
+            android:title="Show all friends"/>
     </group>
 </menu>

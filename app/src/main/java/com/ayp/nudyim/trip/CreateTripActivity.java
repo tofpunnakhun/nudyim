@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ayp.nudyim.R;
 import com.ayp.nudyim.model.User;
@@ -46,7 +47,7 @@ import java.util.Scanner;
  * Created by onepi on 10/6/2016.
  */
 
-public class CreateTripActivity extends AppCompatActivity implements DatePickerFragment.Callback{
+public class CreateTripActivity extends AppCompatActivity implements DatePickerFragment.Callback {
 
     private static final int REQUEST_START_DATE = 9000;
     private static final int REQUEST_END_DATE = 9009;
@@ -70,6 +71,10 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
 
     private String mStartDateStr;
     private String mEndDateStr;
+
+    Date sDate = new Date();
+    Date cDate = new Date();
+    Date eDate = new Date();
 
 
     private FirebaseAuth mFirebaseAuth;
@@ -141,13 +146,13 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     User userLab = postSnapshot.getValue(User.class);
-                    if (userLab.getEmail().equals(mEmail))
-                    {
+                    if (userLab.getEmail().equals(mEmail)) {
                         mUserKey = postSnapshot.getKey();
                         Log.d("Test", "Key user = " + mUserKey);
                     }
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
@@ -165,24 +170,23 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult: ");
-        if (requestCode == REQUEST_CODE){
-            Log.d(TAG, "onActivityResult:1212 ");
-            Log.d(TAG, "resultCode " + resultCode );
-            if (resultCode == RESULT_OK){
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
                 mFriendLists = data.getStringArrayListExtra(InviteFriendActivity.INVITE_VALUE);
-                Log.d(TAG, "onActivityResult List: "+mFriendLists);
+                Log.d(TAG, "onActivityResult List: " + mFriendLists);
             }
         }
     }
 
     @Override
     public void sendValue(Date date, int requestCode) {
-        if (requestCode == REQUEST_START_DATE){
+        if (requestCode == REQUEST_START_DATE) {
+            sDate = date;
             mStartDateStr = toDbDate(date);
             mStartDateTextView.setText(mStartDateStr);
         }
-        if (requestCode == REQUEST_END_DATE){
+        if (requestCode == REQUEST_END_DATE) {
+            eDate = date;
             mEndDateStr = toDbDate(date);
             mEndDateTextView.setText(mEndDateStr);
         }
@@ -198,6 +202,21 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_created:
+
+                if (mStartDateStr == null || mEndDateStr == null){
+                    Toast.makeText(this, "Please fill up your date", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+
+                if (!sDate.after(cDate)) {
+                    Toast.makeText(this, "Please make sure your start date is more than current date", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                if (!eDate.after(sDate)) {
+                    Toast.makeText(this, "Please make sure your end date is more that start date", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+
                 Trip trip = bindTrip();
                 String key = mDatabaseReference.child("trip").push().getKey();
                 mDatabaseReference.child("trip").child(key).setValue(trip);
@@ -214,7 +233,7 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
     }
 
     private void inviteFriendToDb(String key) {
-        for (int i =0;i < mFriendLists.size();i++){
+        for (int i = 0; i < mFriendLists.size(); i++) {
             mDatabaseReference.child("trip")
                     .child(key)
                     .child("member")
@@ -263,7 +282,7 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
 
             jData.put("picture_url", "https://fbi.dek-d.com/27/0378/7611/118707044");
 
-            switch (typeOfToken){
+            switch (typeOfToken) {
                 case "tokens":
                     JSONArray ja = new JSONArray();
                     ja.put("c5pBXXsuCN0:APA91bH8nLMt084KpzMrmSWRS2SnKZudyNjtFVxLRG7VFEFk_RgOm-Q5EQr_oOcLbVcCjFH6vIXIyWhST1jdhR8WMatujccY5uy1TE0hkppW_TSnSBiUsH_tRReutEgsmIMmq8fexTmL");
@@ -296,7 +315,7 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Log.d(TAG, ""+resp);
+                    Log.d(TAG, "" + resp);
                 }
             });
 

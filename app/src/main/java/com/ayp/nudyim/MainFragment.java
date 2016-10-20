@@ -26,7 +26,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainFragment extends Fragment {
@@ -39,9 +42,6 @@ public class MainFragment extends Fragment {
     private ViewPager mViewPager;
 
     private String mUserKey;
-    private String mEmail;
-
-    private DatabaseReference mFirebaseDatabaseReference;
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
@@ -60,7 +60,6 @@ public class MainFragment extends Fragment {
         // Initialize firebase auth
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
-        mEmail = mFirebaseUser.getEmail();
 
     }
 
@@ -70,7 +69,6 @@ public class MainFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.activity_main, container, false);
         mUserKey = getArguments().getString("KEY_USER");
-        Log.d("Test", "Main Fragment: Key user = " + mUserKey);
 
 //        RelativeLayout content = (RelativeLayout) rootView.findViewById(R.id.main);
         mViewPager = (ViewPager) rootView.findViewById(R.id.container_pager);
@@ -90,7 +88,7 @@ public class MainFragment extends Fragment {
         showTripFragment.setArguments(bundle);
         adapter.addFragment(showTripFragment, getString(R.string.title_event));
         adapter.addFragment(new ShowFriendFragment(), getString(R.string.title_friend));
-        adapter.addFragment(new ShowAllFriendFragment(), getString(R.string.title_all_user));
+//        adapter.addFragment(new ShowAllFriendFragment(), getString(R.string.title_all_user));
         mViewPager.setAdapter(adapter);
     }
 
@@ -122,7 +120,6 @@ public class MainFragment extends Fragment {
             return mFragmentTitleList.get(position);
         }
     }
-
 
 
 //    @Override
