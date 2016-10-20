@@ -3,73 +3,67 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:background="@color/colorSchedule">
+        android:orientation="horizontal">
         <LinearLayout
-            android:paddingTop="10dp"
             android:layout_width="80dp"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <TextView
-                android:id="@+id/time_show"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="19.00"
-                android:textSize="22dp"
+            <RelativeLayout
+                android:id="@+id/circle"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center"
-                android:textColor="@color/colorWhite"/>
-
-            <ImageView
-                android:layout_width="14dp"
+                android:background="@drawable/draw_oval">
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_height="18dp"
-                android:src="@mipmap/ic_dot"/>
-            <ImageView
-                android:layout_width="14dp"
-                android:layout_gravity="center"
-                android:layout_height="18dp"
-                android:src="@mipmap/ic_dot"/>
-            <ImageView
-                android:layout_width="14dp"
-                android:layout_gravity="center"
-                android:layout_height="18dp"
-                android:src="@mipmap/ic_dot"/>
+                android:background="@color/colorGray"></RelativeLayout>
         </LinearLayout>
-
         <RelativeLayout
             android:paddingRight="20dp"
-            android:paddingTop="10dp"
+            android:paddingTop="5dp"
             android:paddingBottom="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:background="@drawable/rounded_edittext">
+                android:orientation="vertical">
                 <TextView
-                    android:id="@+id/topic_schedule"
+                    android:id="@+id/time_show"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
                     android:layout_marginRight="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="20dp"
-                    android:textStyle="bold"
-                    android:text="Test"/>
+                    android:textColor="@color/colorGray"
+                    android:text="10:00"/>
+
                 <TextView
-                    android:id="@+id/detail_schedule"
+                    android:id="@+id/topic_schedule"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:text="Topic Schedule"/>
+                <TextView
+                    android:id="@+id/name_create"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textSize="20dp"
-                    android:text="Test"/>
+                    android:textSize="15dp"
+                    android:text="who create"/>
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>

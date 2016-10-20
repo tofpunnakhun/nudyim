@@ -35,7 +35,7 @@ public class MainActivitySingle extends SingleFragmentActivity {
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
+        return super.onNavigationItemSelected(item);
     }
 
     @Override

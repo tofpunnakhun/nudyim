@@ -165,7 +165,10 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: ");
         if (requestCode == REQUEST_CODE){
+            Log.d(TAG, "onActivityResult:1212 ");
+            Log.d(TAG, "resultCode " + resultCode );
             if (resultCode == RESULT_OK){
                 mFriendLists = data.getStringArrayListExtra(InviteFriendActivity.INVITE_VALUE);
                 Log.d(TAG, "onActivityResult List: "+mFriendLists);
@@ -212,15 +215,13 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
 
     private void inviteFriendToDb(String key) {
         for (int i =0;i < mFriendLists.size();i++){
-            mDatabaseReference
-                    .child("trip")
+            mDatabaseReference.child("trip")
                     .child(key)
                     .child("member")
                     .child(mFriendLists.get(i))
                     .setValue(true);
 
             UserTrip usertrip = new UserTrip(key);
-
             mDatabaseReference
                     .child("user")
                     .child(mFriendLists.get(i))
@@ -228,6 +229,7 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
                     .child(key)
                     .setValue(usertrip);
         }
+
         UserTrip userTrip = new UserTrip(key);
         mDatabaseReference
                 .child("user")

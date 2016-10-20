@@ -6,7 +6,7 @@ package com.ayp.nudyim.schedule;
 
 public class Schedule {
     private String topic;
-    private String detail;
+    private String name;
     private String hour;
     private String minute;
 
@@ -14,9 +14,9 @@ public class Schedule {
 
     }
 
-    public Schedule(String topic, String detail, String hour, String minute){
+    public Schedule(String topic, String name, String hour, String minute){
         this.topic = topic;
-        this.detail = detail;
+        this.name = name;
         this.hour = hour;
         this.minute = minute;
     }
@@ -29,12 +29,12 @@ public class Schedule {
         this.topic = topic;
     }
 
-    public String getDetail() {
-        return detail;
+    public String getName() {
+        return name;
     }
 
-    public void setDetail(String detail) {
-        this.detail = detail;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getHour() {

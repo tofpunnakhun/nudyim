@@ -1,6 +1,8 @@
 package com.ayp.nudyim.schedule;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,10 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.ayp.nudyim.R;
+import com.ayp.nudyim.database.FireBaseConnect;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,13 +41,15 @@ public class ScheduleDate extends Fragment {
     public static class ScheduleViewHolder extends RecyclerView.ViewHolder {
         public TextView timeTextView;
         public TextView topicTextView;
-        public TextView detailTextView;
+        public TextView nameTextView;
+        public RelativeLayout circle;
 
         public ScheduleViewHolder(View v) {
             super(v);
             timeTextView = (TextView) itemView.findViewById(R.id.time_show);
             topicTextView = (TextView) itemView.findViewById(R.id.topic_schedule);
-            detailTextView = (TextView) itemView.findViewById(R.id.detail_schedule);
+            nameTextView = (TextView) itemView.findViewById(R.id.name_create);
+            circle = (RelativeLayout) itemView.findViewById(R.id.circle);
         }
     }
 
@@ -103,7 +109,6 @@ public class ScheduleDate extends Fragment {
                 if(flag){
                     mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 }
-
             }
 
             @Override
@@ -122,7 +127,10 @@ public class ScheduleDate extends Fragment {
 //                String time = model.getHour() + ":" + model.getMinute();
                 viewHolder.timeTextView.setText(model.getHour());
                 viewHolder.topicTextView.setText(model.getTopic());
-                viewHolder.detailTextView.setText(model.getDetail());
+                viewHolder.nameTextView.setText(model.getName());
+
+                GradientDrawable bgShape = (GradientDrawable)viewHolder.circle.getBackground();
+                bgShape.setColor(Color.BLACK);
             }
         };
 
@@ -145,7 +153,6 @@ public class ScheduleDate extends Fragment {
                 alertDialogBuilder.setView(addScheduleView);
 
                 final EditText titleInput = (EditText) addScheduleView.findViewById(R.id.titleInput);
-                final EditText detailInput = (EditText) addScheduleView.findViewById(R.id.input_detail);
                 final TimePicker timePicker = (TimePicker) addScheduleView.findViewById(R.id.timePicker);
 
                 Calendar c = Calendar.getInstance();
@@ -162,19 +169,12 @@ public class ScheduleDate extends Fragment {
                                     public void onClick(DialogInterface dialog,int id) {
                                         int hour = 0;
                                         int min = 0;
-
                                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                                             hour = timePicker.getHour();
                                             min = timePicker.getMinute();
                                         }
-                                        Log.d("Test", "Title = " + String.valueOf(titleInput.getText()) + "Detail = " + String.valueOf(detailInput.getText()) + "Hour = "
-                                                + String.valueOf(hour) + "Min = " + String.valueOf(min));
-
-                                        String key = String.valueOf(hour) + ":" + String.valueOf(min);
-
-                                        Schedule schedule = new Schedule(titleInput.getText().toString(), detailInput.getText().toString(), String.valueOf(hour)+":"+String.valueOf(min), String.valueOf(min));
+                                        Schedule schedule = new Schedule(titleInput.getText().toString(), FireBaseConnect.getInstance().getUsername(), String.valueOf(hour)+":"+String.valueOf(min), String.valueOf(min));
                                         mFirebaseDatabaseReference.child(TRIP_CHILD).child(KEYID).child(SCHEDULE_CHILD).child(mDate).push().setValue(schedule);
-
                                     }
                                 })
                         .setNegativeButton("Cancel",

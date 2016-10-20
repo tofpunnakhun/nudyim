@@ -14,21 +14,10 @@
             android:singleLine="true"
             android:hint="Title" />
     </android.support.design.widget.TextInputLayout>
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_detail_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/input_topic">
 
-        <EditText
-            android:id="@+id/input_detail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Detail" />
-    </android.support.design.widget.TextInputLayout>
     <TimePicker
         android:id="@+id/timePicker"
-        android:layout_below="@+id/input_detail_layout"
+        android:layout_below="@+id/input_topic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

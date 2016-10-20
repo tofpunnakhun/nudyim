@@ -1,5 +1,6 @@
 package com.ayp.nudyim.trip;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -70,6 +71,7 @@ public class InviteFriendActivity extends AppCompatActivity {
                 Log.d(TAG, "inviteCheckboxList: "+inviteCheckboxList);
                 Intent intent = new Intent();
                 intent.putStringArrayListExtra(INVITE_VALUE, (ArrayList<String>) inviteCheckboxList);
+                setResult(Activity.RESULT_OK,intent);
                 finish();
         }
         return super.onOptionsItemSelected(item);

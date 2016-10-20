@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.ayp.nudyim.R;
 import com.ayp.nudyim.SignInActivity;
+import com.ayp.nudyim.database.FireBaseConnect;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.common.ConnectionResult;
@@ -43,7 +44,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by Punnakhun on 10/18/2016.
  */
 
-public class ChatFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener{
+public class ChatFragment extends Fragment {
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
         public TextView messageTextView;
@@ -69,22 +70,19 @@ public class ChatFragment extends Fragment implements GoogleApiClient.OnConnecti
     private String mPhotoUrl;
     private SharedPreferences mSharedPreferences;
 
-
     // Firebase instance variables
-    private FirebaseAuth mFirebaseAuth;
-    private FirebaseUser mFirebaseUser;
+
     private DatabaseReference mFirebaseDatabaseReference;
     private FirebaseRecyclerAdapter<ChatMessage, MessageViewHolder>
             mFirebaseAdapter;
-//    private FirebaseRemoteConfig mFirebaseRemoteConfig;
 
     private Button mSendButton;
     private RecyclerView mMessageRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
-    private ProgressBar mProgressBar;
     private EditText mMessageEditText;
 
-    private static final int DEFAULT_MSG_LENGTH_LIMIT = 10;
+    private FireBaseConnect mFireBaseConnect;
+    private static final int DEFAULT_MSG_LENGTH_LIMIT = 40;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,42 +94,27 @@ public class ChatFragment extends Fragment implements GoogleApiClient.OnConnecti
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.chat_fragment,container,false);
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        // Set default username is anonymous.
-        mUsername = "anonymous";
 
         KEY_CHILD = getArguments().getString("KEY_CHILD");
 
-        // Initialize Firebase Auth
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        mFirebaseUser = mFirebaseAuth.getCurrentUser();
-        if (mFirebaseUser == null) {
-            // Not signed in, launch the Sign In activity
-            startActivity(new Intent(getActivity(), SignInActivity.class));
-            getActivity().finish();
-        } else {
-            mUsername = mFirebaseUser.getDisplayName();
-            if (mFirebaseUser.getPhotoUrl() != null) {
-                mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
-            }
-        }
+        // FireBase Connect
+        mFireBaseConnect = FireBaseConnect.getInstance();
+        mUsername = mFireBaseConnect.getUsername();
+        mPhotoUrl = mFireBaseConnect.getPhotoUrl();
+        mFirebaseDatabaseReference = mFireBaseConnect.getFirebaseDatabaseReference();
+
         // Initialize ProgressBar and RecyclerView.
-        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         mMessageRecyclerView = (RecyclerView) view.findViewById(R.id.messageRecyclerView);
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mLinearLayoutManager.setStackFromEnd(true);
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        // New child entries
-        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
-
         mFirebaseAdapter = new FirebaseRecyclerAdapter<ChatMessage, MessageViewHolder>(ChatMessage.class,
                 R.layout.item_message,
                 MessageViewHolder.class,
                 mFirebaseDatabaseReference.child(TRIP_CHILD).child(KEY_CHILD).child(MESSAGES_CHILD)) {
-
             @Override
             protected void populateViewHolder(MessageViewHolder viewHolder, ChatMessage model, int position) {
-                mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 if (mUsername.equals(model.getName()))
                 {
                     Drawable drawable = getActivity().getResources().getDrawable(R.drawable.rounded_item_message_same_profile);
@@ -141,7 +124,6 @@ public class ChatFragment extends Fragment implements GoogleApiClient.OnConnecti
                 }
                 else{
                     viewHolder.messageTextView.setText(model.getText());
-
                     viewHolder.messengerTextView.setText(model.getName());
                     if (model.getPhotoUrl() == null) {
                         viewHolder.messengerImageView
@@ -194,7 +176,6 @@ public class ChatFragment extends Fragment implements GoogleApiClient.OnConnecti
                     mSendButton.setEnabled(false);
                 }
             }
-
             @Override
             public void afterTextChanged(Editable editable) {
             }
@@ -215,46 +196,4 @@ public class ChatFragment extends Fragment implements GoogleApiClient.OnConnecti
         });
         return view;
     }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-//    public void fetchConfig() {
-//        long cacheExpiration = 3600; // 1 hour in seconds
-//        // If developer mode is enabled reduce cacheExpiration to 0 so that
-//        // each fetch goes to the server. This should not be used in release
-//        // builds.
-//        if (mFirebaseRemoteConfig.getInfo().getConfigSettings()
-//                .isDeveloperModeEnabled()) {
-//            cacheExpiration = 0;
-//        }
-//        mFirebaseRemoteConfig.fetch(cacheExpiration)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        // Make the fetched config available via
-//                        // FirebaseRemoteConfig get<type> calls.
-//                        mFirebaseRemoteConfig.activateFetched();
-//                        applyRetrievedLengthLimit();
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        // There has been an error fetching the config
-//                        Log.w(TAG, "Error fetching config: " +
-//                                e.getMessage());
-//                        applyRetrievedLengthLimit();
-//                    }
-//                });
-//    }
-//    private void applyRetrievedLengthLimit() {
-//        Long friendly_msg_length =
-//                mFirebaseRemoteConfig.getLong("friendly_msg_length");
-//        mMessageEditText.setFilters(new InputFilter[]{new
-//                InputFilter.LengthFilter(friendly_msg_length.intValue())});
-//        Log.d(TAG, "FML is: " + friendly_msg_length);
-//    }
 }
