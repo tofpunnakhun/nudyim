@@ -2,21 +2,18 @@ package com.ayp.nudyim.trip;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
+import com.ayp.nudyim.R;
 import com.ayp.nudyim.TripActivity;
-import com.ayp.nudyim.model.User;
+import com.ayp.nudyim.model.Trip;
 import com.ayp.nudyim.model.UserTrip;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -26,10 +23,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.ayp.nudyim.trip.CreateTripActivity;
-import com.ayp.nudyim.R;
-import com.ayp.nudyim.trip.TripHolder;
-import com.ayp.nudyim.model.Trip;
 import com.google.firebase.database.ValueEventListener;
 
 /**
@@ -42,15 +35,12 @@ public class ShowTripFragment extends Fragment {
     private DatabaseReference mDatabaseReference;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
-    private String mUserKey;
-    private String mEmail;
-    private String  mUUID;
+
+    private String mUUID;
 
     private FirebaseRecyclerAdapter<UserTrip, TripHolder> mAdapter;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
-
-    private DatabaseReference mFirebaseDatabaseReference;
 
     String mTopic;
     String mLocation;
@@ -63,7 +53,6 @@ public class ShowTripFragment extends Fragment {
         // Initialize firebase auth
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
-        mEmail = mFirebaseUser.getEmail();
     }
 
     @Override
@@ -77,25 +66,6 @@ public class ShowTripFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
 
         mUUID = mFirebaseUser.getUid();
-        Log.d("Test", "Key user = " + mUUID);
-
-//        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
-//        mFirebaseDatabaseReference.child("user").addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-//                    User userLab = postSnapshot.getValue(User.class);
-//                    if (userLab.getEmail().equals(mEmail))
-//                    {
-//                        mUserKey = postSnapshot.getKey();
-//                        Log.d("Test", "Key user = " + mUserKey);
-//                    }
-//                }
-//            }
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//            }
-//        });
 
 //         Set up Layout Manager, reverse layout
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
@@ -108,7 +78,7 @@ public class ShowTripFragment extends Fragment {
                 UserTrip.class,
                 R.layout.holder_show_trip,
                 TripHolder.class,
-                    mDatabaseReference.child("user").child(mUUID).child("trip")) {
+                mDatabaseReference.child("user").child(mUUID).child("trip")) {
             @Override
             protected void populateViewHolder(final TripHolder viewHolder, UserTrip model, int position) {
                 final DatabaseReference ref = getRef(position);
@@ -128,7 +98,7 @@ public class ShowTripFragment extends Fragment {
                             viewHolder.mPhofileCircleImageView
                                     .setImageDrawable(ContextCompat
                                             .getDrawable(getActivity(), R.drawable.ic_account_circle_black_36dp));
-                        }else{
+                        } else {
                             Glide.with(getActivity())
                                     .load(mPicture)
                                     .into(viewHolder.mPhofileCircleImageView);
@@ -140,11 +110,8 @@ public class ShowTripFragment extends Fragment {
                                 Intent intent = new Intent(getActivity(), TripActivity.class);
                                 intent.putExtra("KEY_CHILD", ref.getKey());
                                 getActivity().startActivity(intent);
-//                        Toast.makeText(getActivity(), ref.getKey(), Toast.LENGTH_SHORT).show();
                             }
                         });
-
-                        Log.d("Test", "Detail = :" +  trip.getDetails());
                     }
 
                     @Override
@@ -162,13 +129,6 @@ public class ShowTripFragment extends Fragment {
         mCreateTripFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.main);
-//                CreateTripActivity fragment = CreateTripActivity.newInstance();
-//                getActivity().getSupportFragmentManager()
-//                        .beginTransaction()
-//                        .replace(R.id.fragment_container, fragment) //content.getID()
-//                        .addToBackStack(null)
-//                        .commit();
                 startActivity(new Intent(getActivity(), CreateTripActivity.class));
             }
         });
