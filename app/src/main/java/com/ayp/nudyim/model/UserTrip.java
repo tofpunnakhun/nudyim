@@ -1,7 +1,7 @@
 package com.ayp.nudyim.model;
 
 /**
- * Created by Punnakhun on 10/19/2016.
+ * Created by onepi on 10/20/2016.
  */
 
 public class UserTrip {
@@ -11,7 +11,7 @@ public class UserTrip {
         // Default constructor
     }
 
-    public UserTrip(String key){
+    public UserTrip(String key) {
         this.key = key;
     }
 
