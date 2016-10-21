@@ -46,7 +46,6 @@ public class TripFragment extends Fragment implements View.OnClickListener{
     private RelativeLayout mBudgetLayout;
     private RelativeLayout mChatLayout;
     private RelativeLayout mPhotoLayout;
-    private TextView mTopicName;
     private ProgressBar mProgressBar;
 
     // Firebase instance variables
@@ -76,7 +75,6 @@ public class TripFragment extends Fragment implements View.OnClickListener{
         mBudgetLayout = (RelativeLayout) view.findViewById(R.id.budget_layout);
         mChatLayout = (RelativeLayout) view.findViewById(R.id.chat_layout);
         mPhotoLayout = (RelativeLayout) view.findViewById(R.id.picture_layout);
-        mTopicName = (TextView) view.findViewById(R.id.topicText);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar) ;
 
         //Set On Click Listener
@@ -107,7 +105,6 @@ public class TripFragment extends Fragment implements View.OnClickListener{
                 public void onDataChange(DataSnapshot dataSnapshot) {
 //                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                         tripLab = dataSnapshot.getValue(Trip.class);
-                        mTopicName.setText(tripLab.getTopic());
                         mProgressBar.setVisibility(ProgressBar.INVISIBLE);
 //                        for (String key : tripLab.getMember().keySet()) {
 //                            Log.d("Test", key);

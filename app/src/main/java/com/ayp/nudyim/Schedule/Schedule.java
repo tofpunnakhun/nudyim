@@ -8,15 +8,17 @@ public class Schedule {
     private String topic;
     private String name;
     private String hour;
+    private String time;
     private String minute;
 
     public Schedule(){
 
     }
 
-    public Schedule(String topic, String name, String hour, String minute){
+    public Schedule(String topic, String name, String time,String hour, String minute){
         this.topic = topic;
         this.name = name;
+        this.time = time;
         this.hour = hour;
         this.minute = minute;
     }
@@ -52,4 +54,13 @@ public class Schedule {
     public void setMinute(String minute) {
         this.minute = minute;
     }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
 }
+

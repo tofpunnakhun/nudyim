@@ -8,4 +8,10 @@
     <string name="menu_created">Created</string>
     <string name="date_picker_title">Picker Date</string>
     <string name="menu_done">Done</string>
+    <string name="detail_text">DETAIL</string>
+    <string name="budget_text">BUDGET</string>
+    <string name="picture_text">PICTURE</string>
+    <string name="schedule_text">SCHEDULE</string>
+    <string name="chat_text">CHAT</string>
+    <string name="sign_in">Sign In</string>
 </resources>

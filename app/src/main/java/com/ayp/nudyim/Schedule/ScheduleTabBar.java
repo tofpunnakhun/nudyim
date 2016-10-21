@@ -81,7 +81,7 @@ public class ScheduleTabBar extends Fragment {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         for (int i = 0 ; i < mDiffDays ; i++ )
         {
             Calendar cal = Calendar.getInstance();

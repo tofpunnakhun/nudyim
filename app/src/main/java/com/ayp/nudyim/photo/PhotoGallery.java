@@ -80,7 +80,6 @@ public class PhotoGallery extends Fragment {
 
     private RecyclerView mMessageRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
-    private ProgressBar mProgressBar;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -123,7 +122,6 @@ public class PhotoGallery extends Fragment {
         }
 
         // Initialize ProgressBar and RecyclerView.
-        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         mMessageRecyclerView = (RecyclerView) view.findViewById(R.id.messageRecyclerView);
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -138,7 +136,6 @@ public class PhotoGallery extends Fragment {
 
             @Override
             protected void populateViewHolder(PhotoViewHolder viewHolder, Photo model, int position) {
-                mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 viewHolder.nameUploader.setText(model.getName());
                 Glide.with(getActivity())
                         .load(model.getImageProfile())

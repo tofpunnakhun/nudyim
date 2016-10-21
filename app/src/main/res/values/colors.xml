@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#4CAF50</color>
-    <color name="colorPrimaryDark">#388E3C</color>
-    <color name="colorAccent">#FFD700</color>
-    <color name="colorDetail">#e96560</color>
-    <color name="colorSchedule">#6452ca</color>
-    <color name="colorBudget">#76c8bc</color>
+    <color name="colorPrimary">#7ca8a9</color>
+    <color name="colorPrimaryDark">#30424c</color>
+    <color name="colorAccent">#192e2f</color>
+    <color name="colorDetail">#EC1C4B</color>
+    <color name="colorSchedule">#A6206A</color>
+    <color name="colorBudget">#F16A43</color>
     <color name="colorChat">#F4D03F</color>
-    <color name="colorPicture">#1D8348 </color>
+    <color name="colorPicture">#2F9395 </color>
     <color name="colorWhite">#FFFFFF </color>
     <color name="colorBlack">#000000 </color>
     <color name="colorGray">#BEBEBE </color>
     <color name="colorRed">#FF0000 </color>
     <color name="colorPink">#f156ff </color>
+    <color name="colorGreen">#56ff5a </color>
+    <color name="colorRed2">#ff7656 </color>
+    <color name="colorBlue">#6a56ff </color>
+    <color name="colorOldGreen">#3d676e </color>
+    <color name="colorBackgroundChat">#c0dee9 </color>
+
 </resources>
