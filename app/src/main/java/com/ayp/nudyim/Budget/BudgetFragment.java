@@ -189,7 +189,7 @@ public class BudgetFragment extends Fragment {
                 incomesRadioButton.setChecked(true);
                 // set dialog message
                 alertDialogBuilder
-                        .setTitle("New Budget")
+                        .setTitle("New budget")
                         .setCancelable(false)
                         .setPositiveButton("OK",
                                 new DialogInterface.OnClickListener() {

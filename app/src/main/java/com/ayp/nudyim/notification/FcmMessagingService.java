@@ -31,7 +31,7 @@ public class FcmMessagingService extends FirebaseMessagingService{
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        Log.d(TAG, "Already Message Received!");
+
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         Map<String, String> data = remoteMessage.getData();
         Log.e("FROM", remoteMessage.getFrom());

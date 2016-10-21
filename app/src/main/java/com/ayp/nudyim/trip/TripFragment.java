@@ -14,13 +14,13 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.ayp.nudyim.chat.ChatFragment;
 import com.ayp.nudyim.R;
-import com.ayp.nudyim.photo.PhotoGallery;
-import com.ayp.nudyim.schedule.ScheduleTabBar;
 import com.ayp.nudyim.SignInActivity;
 import com.ayp.nudyim.budget.BudgetFragment;
+import com.ayp.nudyim.chat.ChatFragment;
 import com.ayp.nudyim.model.Trip;
+import com.ayp.nudyim.photo.PhotoGallery;
+import com.ayp.nudyim.schedule.ScheduleTabBar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -146,21 +146,33 @@ public class TripFragment extends Fragment implements View.OnClickListener{
                 Bundle bundleBudget = new Bundle();
                 bundleBudget.putString("KEY_CHILD", KEY_CHILD);
                 budgetFragment.setArguments(bundleBudget);
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, budgetFragment).addToBackStack(null).commit();
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, budgetFragment)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             case R.id.chat_layout :
                 ChatFragment chatFragment = new ChatFragment();
                 Bundle bundleChat = new Bundle();
                 bundleChat.putString("KEY_CHILD", KEY_CHILD);
                 chatFragment.setArguments(bundleChat);
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, chatFragment).addToBackStack(null).commit();
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, chatFragment)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             case R.id.picture_layout :
                 PhotoGallery photoGallery = new PhotoGallery();
                 Bundle bundlePicture = new Bundle();
                 bundlePicture.putString("KEY_CHILD", KEY_CHILD);
                 photoGallery.setArguments(bundlePicture);
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, photoGallery).addToBackStack(null).commit();
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, photoGallery)
+                        .addToBackStack(null)
+                        .commit();
                 break;
         }
     }

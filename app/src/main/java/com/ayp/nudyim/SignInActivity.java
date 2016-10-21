@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ayp.nudyim.model.User;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 /**
  * Created by onepi on 10/2/2016.
@@ -142,11 +143,12 @@ public class SignInActivity extends AppCompatActivity implements
                         flag = true;
                     }
                 }
-                if (!flag){
-                   User user = new User(
+                if (!flag) {
+                    User user = new User(
                             firebaseUser.getDisplayName(),
                             firebaseUser.getEmail(),
-                            firebaseUser.getPhotoUrl().toString());
+                            firebaseUser.getPhotoUrl().toString(),
+                            FirebaseInstanceId.getInstance().getToken());
                     mDatabaseReference.child("user").child(firebaseUser.getUid()).setValue(user);
                 }
             }

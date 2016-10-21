@@ -22,7 +22,6 @@
         android:layout_height="match_parent"
         android:layout_below="@id/app_bar"
         android:id="@+id/fragment_container">
-
     </FrameLayout>
 
     </RelativeLayout>

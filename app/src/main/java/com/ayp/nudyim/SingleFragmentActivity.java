@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ayp.nudyim.friend.ShowAllFriendFragment;
+import com.ayp.nudyim.friend.ShowFriendFragment;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -31,7 +34,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public abstract class SingleFragmentActivity extends AppCompatActivity
-        implements GoogleApiClient.OnConnectionFailedListener, NavigationView.OnNavigationItemSelectedListener {
+        implements GoogleApiClient.OnConnectionFailedListener,
+        NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "SingleFragmentActivity";
     private static final String ANONYMOUS = "anonymous";
@@ -85,7 +89,6 @@ public abstract class SingleFragmentActivity extends AppCompatActivity
             return;
         }
 
-
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -112,7 +115,7 @@ public abstract class SingleFragmentActivity extends AppCompatActivity
         Fragment fragment = getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_container);
 
-        if (fragment == null){
+        if (fragment == null) {
             fragment = onCreateFragment();
 
             getSupportFragmentManager().beginTransaction()
@@ -135,7 +138,6 @@ public abstract class SingleFragmentActivity extends AppCompatActivity
         }
     }
 
-
     protected abstract Fragment onCreateFragment();
 
     @Override
@@ -146,6 +148,27 @@ public abstract class SingleFragmentActivity extends AppCompatActivity
             mUsername = ANONYMOUS;
             Toast.makeText(this, "Sign out", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, SignInActivity.class));
+        }
+        if (item.getItemId() == R.id.nav_show_friend) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, new ShowFriendFragment())
+                    .addToBackStack(null)
+                    .commit();
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        }
+
+        if (item.getItemId() == R.id.nav_show_all_friend) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, new ShowAllFriendFragment())
+                    .addToBackStack(null)
+                    .commit();
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
         }
         return true;
     }

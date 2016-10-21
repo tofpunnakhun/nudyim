@@ -20,7 +20,6 @@ public class TripActivity extends SingleFragmentActivity{
         return TripFragment.newInstance(Key);
     }
 
-
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 

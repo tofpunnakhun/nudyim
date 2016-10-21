@@ -90,7 +90,6 @@ public class DatePickerFragment extends DialogFragment
 
 
         Date date = mCalendar.getTime();
-        Log.d(TAG, "onClick: "+date);
         mCallback.sendValue(date, requestCode);
 //        sendResult(Activity.RESULT_OK, date);
 

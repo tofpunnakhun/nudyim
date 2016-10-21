@@ -8,15 +8,25 @@ public class User {
     private String name;
     private String email;
     private String photoUrl;
+    private String token;
 
     public User() {
         // Default constructor
     }
 
-    public User(String name, String email, String photoUrl){
+    public User(String name, String email, String photoUrl, String token){
         this.name = name;
         this.email = email;
         this.photoUrl = photoUrl;
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getName() {
