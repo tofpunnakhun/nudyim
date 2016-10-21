@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
+import com.ayp.nudyim.trip.ShowTripFragment;
 import com.google.android.gms.common.ConnectionResult;
 
 /**
@@ -14,7 +15,7 @@ public class MainActivitySingle extends SingleFragmentActivity {
 
     @Override
     protected Fragment onCreateFragment() {
-        return MainFragment.newInstance();
+        return ShowTripFragment.newInstance();
     }
 
     @Override

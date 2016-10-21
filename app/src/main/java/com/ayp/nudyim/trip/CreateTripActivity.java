@@ -223,13 +223,12 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
                 inviteFriendToDb(key);
 
                 // notification
-                sendWithOtherThread("token");
+                sendWithOtherThread("tokens");
 
                 finish();
 //                getFragmentManager().popBackStack();
             default:
-                return super.onOptionsItemSelected(item);
-        }
+                return super.onOptionsItemSelected(item);        }
     }
 
     private void inviteFriendToDb(String key) {
@@ -248,6 +247,12 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
                     .child(key)
                     .setValue(usertrip);
         }
+
+        mDatabaseReference.child("trip")
+                .child(key)
+                .child("member")
+                .child(mFirebaseUser.getUid())
+                .setValue(true);
 
         UserTrip userTrip = new UserTrip(key);
         mDatabaseReference
@@ -278,14 +283,16 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
             jNotification.put("body", "I was just create trip, Can you see that?");
             jNotification.put("sound", "default");
             jNotification.put("badge", "1");
-//            jNotification.put("click_action", "OPEN_ACTIVITY");
+            jNotification.put("content_available", "1");
+            jNotification.put("click_action", "OPEN_DETAIL_ACTIVITY");
 
             jData.put("picture_url", "https://fbi.dek-d.com/27/0378/7611/118707044");
 
             switch (typeOfToken) {
                 case "tokens":
                     JSONArray ja = new JSONArray();
-                    ja.put("c5pBXXsuCN0:APA91bH8nLMt084KpzMrmSWRS2SnKZudyNjtFVxLRG7VFEFk_RgOm-Q5EQr_oOcLbVcCjFH6vIXIyWhST1jdhR8WMatujccY5uy1TE0hkppW_TSnSBiUsH_tRReutEgsmIMmq8fexTmL");
+                    ja.put("fltNMjkbOFE:APA91bGWbIq0iIyNfih4BbFtz8cr3joFF1RCM7mceWULIOX6_aZgxCMKA0x1YOJzS-R7h-vFXsvND3h0VPQkRnn65v5cwd813oUrfNkyetMaWmwXn5LXmjW6rDG0qyZtyhG36WriMob3");
+                    ja.put("c0J2ls-3pms:APA91bEs3nqKHiiC4nGLy4e0UUo3eJ7nBCGdgVohZdg23mPUQHUaUoDdWYr0pplfRxryNo5bAUcb-0w3Rcpn5TXkqLzuHgPE8Gk1vM00Ds7K-3kw_22jeCp_LSGCz9XlVHFJE0Z6AM6R");
                     ja.put(FirebaseInstanceId.getInstance().getToken());
                     jPayload.put("registration_ids", ja);
                     break;

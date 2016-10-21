@@ -1,40 +1,28 @@
 package com.ayp.nudyim;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.ayp.nudyim.friend.ShowAllFriendFragment;
 import com.ayp.nudyim.friend.ShowFriendFragment;
-import com.ayp.nudyim.model.User;
 import com.ayp.nudyim.trip.ShowTripFragment;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class MainFragment extends Fragment {
+public class TabFragment extends Fragment {
 
-    public static final String TAG = "MainFragment";
+    public static final String TAG = "TabFragment";
     private static final String ANONYMOUS = "anonymous";
 
     // manage tab pager
@@ -47,9 +35,9 @@ public class MainFragment extends Fragment {
     private FirebaseUser mFirebaseUser;
 
 
-    public static MainFragment newInstance() {
+    public static TabFragment newInstance() {
         Bundle args = new Bundle();
-        MainFragment fragment = new MainFragment();
+        TabFragment fragment = new TabFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -68,7 +56,8 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.activity_main, container, false);
-        mUserKey = getArguments().getString("KEY_USER");
+
+//        mUserKey = getArguments().getString("KEY_USER");
 
 //        RelativeLayout content = (RelativeLayout) rootView.findViewById(R.id.main);
         mViewPager = (ViewPager) rootView.findViewById(R.id.container_pager);
@@ -82,13 +71,13 @@ public class MainFragment extends Fragment {
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
 
-        ShowTripFragment showTripFragment = new ShowTripFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("KEY_USER", mUserKey);
-        showTripFragment.setArguments(bundle);
-        adapter.addFragment(showTripFragment, getString(R.string.title_event));
+//        ShowTripFragment showTripFragment = new ShowTripFragment();
+//        Bundle bundle = new Bundle();
+//        bundle.putString("KEY_USER", mUserKey);
+//        showTripFragment.setArguments(bundle);
+        adapter.addFragment(new ShowTripFragment(), getString(R.string.title_event));
         adapter.addFragment(new ShowFriendFragment(), getString(R.string.title_friend));
-//        adapter.addFragment(new ShowAllFriendFragment(), getString(R.string.title_all_user));
+        adapter.addFragment(new ShowAllFriendFragment(), getString(R.string.title_all_user));
         mViewPager.setAdapter(adapter);
     }
 

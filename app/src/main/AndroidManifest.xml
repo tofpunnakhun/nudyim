@@ -11,13 +11,13 @@
 
         <service android:name=".notification.FcmMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
         <service android:name=".notification.FcmInstanceIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
@@ -28,8 +28,14 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".accept.AcceptFriendActivity">
+            <intent-filter>
+                <action android:name="OPEN_DETAIL_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
@@ -42,6 +48,7 @@
             android:name=".trip.CreateTripActivity"
             android:parentActivityName=".MainActivitySingle" />
         <activity android:name=".trip.InviteFriendActivity" />
+
     </application>
 
 </manifest>

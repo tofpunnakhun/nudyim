@@ -46,6 +46,13 @@ public class ShowTripFragment extends Fragment {
     String mLocation;
     String mPicture;
 
+    public static ShowTripFragment newInstance() {
+        Bundle args = new Bundle();
+        ShowTripFragment fragment = new ShowTripFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
