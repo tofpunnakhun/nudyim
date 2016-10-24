@@ -15,6 +15,7 @@ import android.util.Log;
 
 import com.ayp.nudyim.MainActivitySingle;
 import com.ayp.nudyim.R;
+import com.ayp.nudyim.accept.AcceptFriendActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -26,8 +27,9 @@ import java.util.Map;
  * Created by onepi on 10/19/2016.
  */
 
-public class FcmMessagingService extends FirebaseMessagingService{
-     private static final String TAG = "FcmMessagingService";
+public class FcmMessagingService extends FirebaseMessagingService {
+    private static final String TAG = "FcmMessagingService";
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
@@ -41,11 +43,14 @@ public class FcmMessagingService extends FirebaseMessagingService{
     private void sendNotification(RemoteMessage.Notification notification, Map<String, String> data) {
         Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
 
-        Intent intent = new Intent(this, MainActivitySingle.class);
+//        Intent intent = new Intent(this, MainActivitySingle.class);
+        Intent intent = new Intent(this, AcceptFriendActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         Bundle bundle = new Bundle();
         bundle.putString("picture_url", data.get("picture_url"));
+        bundle.putString("key_friend", data.get("key_friend"));
+        bundle.putString("key_myself", data.get("key_myself"));
         intent.putExtras(bundle);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
@@ -57,7 +62,7 @@ public class FcmMessagingService extends FirebaseMessagingService{
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 //.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.win))
                 .setContentIntent(pendingIntent)
-                .setContentInfo("Your Trip sir!")
+                .setContentInfo("Friend Request")
                 .setLargeIcon(icon)
                 .setColor(Color.YELLOW)
                 .setLights(Color.RED, 1000, 300)

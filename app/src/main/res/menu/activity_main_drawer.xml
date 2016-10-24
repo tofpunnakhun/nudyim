@@ -7,9 +7,9 @@
             android:title="Logout" />
         <item android:id="@+id/nav_show_friend"
             android:icon="@android:drawable/ic_menu_my_calendar"
-            android:title="Show friends"/>
+            android:title="Friends"/>
         <item android:id="@+id/nav_show_all_friend"
             android:icon="@android:drawable/ic_menu_my_calendar"
-            android:title="Show all friends"/>
+            android:title="All Friends"/>
     </group>
 </menu>

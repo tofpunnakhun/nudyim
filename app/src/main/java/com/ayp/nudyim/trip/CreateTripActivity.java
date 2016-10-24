@@ -291,8 +291,8 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
             switch (typeOfToken) {
                 case "tokens":
                     JSONArray ja = new JSONArray();
-                    ja.put("fltNMjkbOFE:APA91bGWbIq0iIyNfih4BbFtz8cr3joFF1RCM7mceWULIOX6_aZgxCMKA0x1YOJzS-R7h-vFXsvND3h0VPQkRnn65v5cwd813oUrfNkyetMaWmwXn5LXmjW6rDG0qyZtyhG36WriMob3");
-                    ja.put("c0J2ls-3pms:APA91bEs3nqKHiiC4nGLy4e0UUo3eJ7nBCGdgVohZdg23mPUQHUaUoDdWYr0pplfRxryNo5bAUcb-0w3Rcpn5TXkqLzuHgPE8Gk1vM00Ds7K-3kw_22jeCp_LSGCz9XlVHFJE0Z6AM6R");
+                    ja.put("dTyJzuraDIY:APA91bFtz1vPiuvn_vvYNyNRnw7OsBGkHXICbNgJA2hkzLSKjvIwJ8Vy0-hIItUel-WcRvVbmivS7_PYW_ethmGD0Er6FSdlVVuQc-fBLOQ9k9oniZu9NZnsVYvYb7oASadx__wPe6Gu");
+//                    ja.put("cmGQdc8HdOQ:APA91bEqBlLyPAlxaKWwghhVCNhK6QUbfUfTfwrRXoKIRfxjukRee5EJICO5-fzV6BbIqL1eXzuhfiERM7JGi2FRJey98k-m1rKmkHhnS3yvmT9LQrooJgc8_5l77g0Rht4gN1BqEYV4");
                     ja.put(FirebaseInstanceId.getInstance().getToken());
                     jPayload.put("registration_ids", ja);
                     break;

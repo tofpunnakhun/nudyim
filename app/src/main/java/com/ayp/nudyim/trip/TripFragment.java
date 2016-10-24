@@ -58,7 +58,6 @@ public class TripFragment extends Fragment implements View.OnClickListener{
 
     public static TripFragment newInstance(String key) {
         Bundle args = new Bundle();
-        Log.d(TAG, "key = " + key);
         KEY_CHILD = key;
         TripFragment fragment = new TripFragment();
         fragment.setArguments(args);
