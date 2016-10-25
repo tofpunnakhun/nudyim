@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.ayp.nudyim.friend.ShowAllFriendFragment;
 import com.ayp.nudyim.friend.ShowFriendFragment;
+import com.ayp.nudyim.trip.ShowTripFragment;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -170,6 +171,18 @@ public abstract class SingleFragmentActivity extends AppCompatActivity
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
         }
+
+        if (item.getItemId() == R.id.nav_show_trip) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, new ShowTripFragment())
+                    .addToBackStack(null)
+                    .commit();
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        }
+
         return true;
     }
 }
