@@ -5,11 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:fillViewport="false">
+    android:fillViewport="false"
+    android:background="@color/colorBackgroundChat">
     <RelativeLayout
+        android:id="@+id/layout_trip_page"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorBackgroundChat">
+        android:visibility="visible">
         <LinearLayout
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
@@ -46,12 +48,12 @@
                         android:textStyle="bold"/>
                     <ImageView
                         android:id="@+id/image_detail"
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
                         android:layout_above="@id/detail_text"
                         android:layout_centerInParent="true"
                         android:layout_marginBottom="8dp"
-                        android:src="@mipmap/ic_detail_2" />
+                        android:src="@drawable/new_detail_icon" />
                 </RelativeLayout>
                 <RelativeLayout
                     android:id="@+id/budget_layout"
@@ -78,7 +80,7 @@
                         android:layout_above="@id/budget_text"
                         android:layout_centerInParent="true"
                         android:layout_marginBottom="8dp"
-                        android:src="@mipmap/ic_money" />
+                        android:src="@drawable/money_icon" />
                 </RelativeLayout>
                 <RelativeLayout
                     android:id="@+id/picture_layout"
@@ -105,7 +107,7 @@
                         android:layout_above="@id/picture_text"
                         android:layout_centerInParent="true"
                         android:layout_marginBottom="20dp"
-                        android:src="@mipmap/ic_photo" />
+                        android:src="@drawable/photo_icon" />
                 </RelativeLayout>
             </LinearLayout>
             <LinearLayout
@@ -141,7 +143,7 @@
                         android:layout_above="@id/schedule_text"
                         android:layout_centerInParent="true"
                         android:layout_marginBottom="25dp"
-                        android:src="@mipmap/ic_schedule" />
+                        android:src="@drawable/schedule_icon" />
                 </RelativeLayout>
                 <RelativeLayout
                     android:id="@+id/chat_layout"
@@ -165,7 +167,7 @@
                         android:id="@+id/image_chat"
                         android:layout_width="180dp"
                         android:layout_height="180dp"
-                        android:src="@mipmap/ic_chat"
+                        android:src="@drawable/chat_icon"
                         android:layout_centerVertical="true"
                         android:layout_alignParentStart="true" />
                 </RelativeLayout>

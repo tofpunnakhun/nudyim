@@ -1,6 +1,7 @@
 package com.ayp.nudyim.trip;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -31,7 +32,6 @@ import com.google.firebase.database.ValueEventListener;
 public class ShowTripFragment extends Fragment {
 
     private FloatingActionButton mCreateTripFAB;
-
     private DatabaseReference mDatabaseReference;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
@@ -56,7 +56,6 @@ public class ShowTripFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // Initialize firebase auth
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
@@ -139,7 +138,6 @@ public class ShowTripFragment extends Fragment {
                 startActivity(new Intent(getActivity(), CreateTripActivity.class));
             }
         });
-
         return rootView;
     }
 
@@ -152,4 +150,5 @@ public class ShowTripFragment extends Fragment {
     public void onStop() {
         super.onStop();
     }
+
 }

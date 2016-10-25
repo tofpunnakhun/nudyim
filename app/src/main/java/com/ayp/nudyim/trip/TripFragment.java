@@ -18,6 +18,7 @@ import com.ayp.nudyim.R;
 import com.ayp.nudyim.SignInActivity;
 import com.ayp.nudyim.budget.BudgetFragment;
 import com.ayp.nudyim.chat.ChatFragment;
+import com.ayp.nudyim.detail.DetailFragment;
 import com.ayp.nudyim.model.Trip;
 import com.ayp.nudyim.photo.PhotoGallery;
 import com.ayp.nudyim.schedule.ScheduleTabBar;
@@ -41,6 +42,7 @@ public class TripFragment extends Fragment implements View.OnClickListener{
     private SharedPreferences mSharedPreferences;
 
     //declare object in layout xml
+    private RelativeLayout mTripPageLayout;
     private RelativeLayout mDetailLayout;
     private RelativeLayout mScheduleLayout;
     private RelativeLayout mBudgetLayout;
@@ -70,6 +72,7 @@ public class TripFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_trip_fragment,container,false);
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mTripPageLayout = (RelativeLayout) view.findViewById(R.id.layout_trip_page);
         mDetailLayout = (RelativeLayout) view.findViewById(R.id.detail_layout);
         mScheduleLayout = (RelativeLayout) view.findViewById(R.id.schedule_layout);
         mBudgetLayout = (RelativeLayout) view.findViewById(R.id.budget_layout);
@@ -104,19 +107,9 @@ public class TripFragment extends Fragment implements View.OnClickListener{
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 //                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                        tripLab = dataSnapshot.getValue(Trip.class);
-                        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-//                        for (String key : tripLab.getMember().keySet()) {
-//                            Log.d("Test", key);
-//                        }
-
-//                        Log.d("Test", tripLab.getMember().toString());
-
-//                        for(DataSnapshot post2 : postSnapshot.child("member").getChildren()){
-//                           Log.d("Test", post2.getKey());
-//                       }
-//                        UserLab userLab = postSnapshot.getValue(UserLab.class);
-//                        Log.d("Test", userLab.getEmail() + postSnapshot.getKey());
+                    tripLab = dataSnapshot.getValue(Trip.class);
+                    mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                    mTripPageLayout.setVisibility(RelativeLayout.VISIBLE);
 //                    }
                 }
                 @Override
@@ -130,7 +123,15 @@ public class TripFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.detail_layout :
-                //TODO
+                DetailFragment detailFragment = new DetailFragment();
+                Bundle bundleDetail = new Bundle();
+                bundleDetail.putString("KEY_CHILD", KEY_CHILD);
+                detailFragment.setArguments(bundleDetail);
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, detailFragment)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             case R.id.schedule_layout :
                 ScheduleTabBar scheduleTabBar = new ScheduleTabBar();

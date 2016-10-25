@@ -115,6 +115,7 @@ public class BudgetFragment extends Fragment {
 
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.budget_fragment,container,false);
 
         KEY_CHILD = getArguments().getString("KEY_CHILD");

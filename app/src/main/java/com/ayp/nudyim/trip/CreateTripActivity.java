@@ -1,6 +1,10 @@
 package com.ayp.nudyim.trip;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,7 +15,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +46,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -47,7 +55,7 @@ import java.util.Scanner;
  * Created by onepi on 10/6/2016.
  */
 
-public class CreateTripActivity extends AppCompatActivity implements DatePickerFragment.Callback {
+public class CreateTripActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int REQUEST_START_DATE = 9000;
     private static final int REQUEST_END_DATE = 9009;
@@ -57,13 +65,6 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
     private static final String DIALOG_DATE = "DIALOG_DATE";
     private static final int REQUEST_CODE = 1189;
     private static final String TAG = "CreateTripActivity";
-
-    private EditText mTopicEditText;
-    private EditText mDetailEditText;
-    private EditText mLocationEditText;
-    private TextView mStartDateTextView;
-    private TextView mEndDateTextView;
-    private TextView mInviteFriendTextView;
 
     private List<String> mFriendLists = new ArrayList<>();
 
@@ -76,12 +77,24 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
     Date cDate = new Date();
     Date eDate = new Date();
 
+    Date sDateKeep = new Date();
+    Date eDateKeep = new Date();
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
     private DatabaseReference mDatabaseReference;
     private String mEmail;
     private String mUserKey;
+
+    //declare object in layout xml
+    private EditText mTopicEditText;
+    private RelativeLayout mDetailLayout;
+    private RelativeLayout mInviteLayout;
+    private RelativeLayout mLocationLayout;
+    private RelativeLayout mDateLayout;
+
+    private String mDetail;
+    private String mLocation;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,6 +109,9 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
         getSupportActionBar().setTitle(EMPTY_STRING);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_cancel);
 
+        mDetail = "";
+        mLocation = "";
+
 //        Toolbar tb = (Toolbar)findViewById(R.id.toolBar);
 //        setSupportActionBar(tb);
         //getActionBar().setDisplayShowTitleEnabled(false);
@@ -103,43 +119,16 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
         mTopicEditText = (EditText) findViewById(R.id.topic_trip);
-        mLocationEditText = (EditText) findViewById(R.id.location_trip);
-        mDetailEditText = (EditText) findViewById(R.id.detail_trip);
+        mDetailLayout = (RelativeLayout) findViewById(R.id.detail_layout);
+        mDateLayout = (RelativeLayout) findViewById(R.id.date_layout);
+        mLocationLayout = (RelativeLayout) findViewById(R.id.location_layout);
+        mInviteLayout = (RelativeLayout) findViewById(R.id.invite_layout);
 
-        mInviteFriendTextView = (TextView) findViewById(R.id.invite_trip);
-        mInviteFriendTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(CreateTripActivity.this, InviteFriendActivity.class);
-                startActivityForResult(i, REQUEST_CODE);
-            }
-        });
-
-        mStartDateTextView = (TextView) findViewById(R.id.start_date_view);
-        mStartDateTextView.setText(toShortDate(new Date()));
-        mStartDateTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fm = getSupportFragmentManager();
-                DatePickerFragment datePickerFragment =
-                        DatePickerFragment.newInstance(new Date(), REQUEST_START_DATE);
-//                datePickerFragment.setTargetFragment(CreateTripActivity.this, REQUEST_START_DATE);
-                datePickerFragment.show(fm, DIALOG_DATE);
-            }
-        });
-
-        mEndDateTextView = (TextView) findViewById(R.id.end_date_view);
-        mEndDateTextView.setText(toShortDate(new Date()));
-        mEndDateTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fm = getSupportFragmentManager();
-                DatePickerFragment datePickerFragment =
-                        DatePickerFragment.newInstance(new Date(), REQUEST_END_DATE);
-//                datePickerFragment.setTargetFragment(CreateTripActivity.this, REQUEST_END_DATE);
-                datePickerFragment.show(fm, DIALOG_DATE);
-            }
-        });
+        //Set On Click Listener
+        mDetailLayout.setOnClickListener(this);
+        mDateLayout.setOnClickListener(this);
+        mLocationLayout.setOnClickListener(this);
+        mInviteLayout.setOnClickListener(this);
 
         mDatabaseReference.child("user").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -178,19 +167,6 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
         }
     }
 
-    @Override
-    public void sendValue(Date date, int requestCode) {
-        if (requestCode == REQUEST_START_DATE) {
-            sDate = date;
-            mStartDateStr = toDbDate(date);
-            mStartDateTextView.setText(mStartDateStr);
-        }
-        if (requestCode == REQUEST_END_DATE) {
-            eDate = date;
-            mEndDateStr = toDbDate(date);
-            mEndDateTextView.setText(mEndDateStr);
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -202,7 +178,6 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_created:
-
                 if (mStartDateStr == null || mEndDateStr == null){
                     Toast.makeText(this, "Please fill up your date", Toast.LENGTH_SHORT).show();
                     return false;
@@ -217,6 +192,7 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
                     return false;
                 }
 
+                //TODO
                 Trip trip = bindTrip();
                 String key = mDatabaseReference.child("trip").push().getKey();
                 mDatabaseReference.child("trip").child(key).setValue(trip);
@@ -341,11 +317,178 @@ public class CreateTripActivity extends AppCompatActivity implements DatePickerF
         String topic = mTopicEditText.getText().toString();
         String startDate = mStartDateStr;
         String endDate = mEndDateStr;
-        String location = mLocationEditText.getText().toString();
-        String details = mDetailEditText.getText().toString();
+        String location = mLocation;
+        String details = mDetail;
         String photoUrl = mFirebaseUser.getPhotoUrl().toString();
 
         Trip trip = new Trip(topic, startDate, endDate, location, details, photoUrl);
         return trip;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.detail_layout :
+                final Dialog alertDialogDetail = new Dialog(this);
+                alertDialogDetail.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                alertDialogDetail.setContentView(R.layout.trip_input_detail);
+
+                // set the custom dialog components - text, image and button
+                final EditText detailTrip = (EditText) alertDialogDetail.findViewById(R.id.detail_input);
+                final TextView okText = (TextView) alertDialogDetail.findViewById(R.id.ok_text);
+                final TextView cancelText = (TextView) alertDialogDetail.findViewById(R.id.cancel_text);
+
+                if (!mDetail.equals(""))
+                {
+                    detailTrip.setText(mDetail);
+                }
+
+                okText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mDetail = detailTrip.getText().toString();
+                        alertDialogDetail.cancel();
+                    }
+                });
+                cancelText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialogDetail.cancel();
+                    }
+                });
+                alertDialogDetail.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                alertDialogDetail.show();
+                break;
+            case R.id.location_layout :
+                final Dialog alertDialogLocation = new Dialog(this);
+                alertDialogLocation.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                alertDialogLocation.setContentView(R.layout.trip_input_location);
+
+                // set the custom dialog components - text, image and button
+                final EditText locationTrip = (EditText) alertDialogLocation.findViewById(R.id.location_input);
+                final TextView okTextLocation = (TextView) alertDialogLocation.findViewById(R.id.ok_text);
+                final TextView cancelTextLocation = (TextView) alertDialogLocation.findViewById(R.id.cancel_text);
+
+                if (!mLocation.equals(""))
+                {
+                    locationTrip.setText(mDetail);
+                }
+
+                okTextLocation.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mLocation = locationTrip.getText().toString();
+                        alertDialogLocation.cancel();
+                    }
+                });
+                cancelTextLocation.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialogLocation.cancel();
+                    }
+                });
+                alertDialogLocation.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                alertDialogLocation.show();
+
+                break;
+            case R.id.date_layout :
+                final Dialog alertDialogDate = new Dialog(this);
+                alertDialogDate.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                alertDialogDate.setContentView(R.layout.trip_input_date);
+
+                // set the custom dialog components - text, image and button
+                final TextView startDateTextView = (TextView) alertDialogDate.findViewById(R.id.start_date_view);
+                final TextView endDateTextView = (TextView) alertDialogDate.findViewById(R.id.end_date_view);
+                final TextView okTextDate = (TextView) alertDialogDate.findViewById(R.id.ok_text);
+                final TextView cancelTextDate= (TextView) alertDialogDate.findViewById(R.id.cancel_text);
+
+                if(mStartDateStr == null)
+                {
+                    startDateTextView.setText(toShortDate(new Date()));
+                }
+                else
+                {
+                    startDateTextView.setText(mStartDateStr);
+                }
+
+                final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                          int dayOfMonth) {
+                        Calendar myCalendar = Calendar.getInstance();
+                        myCalendar.set(Calendar.YEAR, year);
+                        myCalendar.set(Calendar.MONTH, monthOfYear);
+                        myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        Date date = myCalendar.getTime();
+                        sDateKeep = date;
+                        startDateTextView.setText(toDbDate(date));
+                    }
+                };
+                startDateTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Calendar myCalendar = Calendar.getInstance();
+                        new DatePickerDialog(CreateTripActivity.this, date, myCalendar
+                                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                                myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                    }
+                });
+
+                if(mEndDateStr == null)
+                {
+                    endDateTextView.setText(toShortDate(new Date()));
+                }
+                else
+                {
+                    endDateTextView.setText(mEndDateStr);
+                }
+
+                final DatePickerDialog.OnDateSetListener dateEnd = new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                          int dayOfMonth) {
+                        Calendar myCalendarEnd = Calendar.getInstance();
+                        myCalendarEnd.set(Calendar.YEAR, year);
+                        myCalendarEnd.set(Calendar.MONTH, monthOfYear);
+                        myCalendarEnd.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        Date date = myCalendarEnd.getTime();
+                        eDateKeep = date;
+                        endDateTextView.setText(toDbDate(date));
+                    }
+                };
+                endDateTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Calendar myCalendarEnd = Calendar.getInstance();
+                        new DatePickerDialog(CreateTripActivity.this, dateEnd, myCalendarEnd
+                                .get(Calendar.YEAR), myCalendarEnd.get(Calendar.MONTH),
+                                myCalendarEnd.get(Calendar.DAY_OF_MONTH)).show();
+                    }
+                });
+
+                okTextDate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        sDate = sDateKeep;
+                        mStartDateStr = toDbDate(sDate);
+                        eDate = eDateKeep;
+                        mEndDateStr = toDbDate(eDate);
+                        alertDialogDate.cancel();
+                    }
+                });
+                cancelTextDate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialogDate.cancel();
+                    }
+                });
+                alertDialogDate.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                alertDialogDate.show();
+                break;
+            case R.id.invite_layout :
+                Intent i = new Intent(CreateTripActivity.this, InviteFriendActivity.class);
+                startActivityForResult(i, REQUEST_CODE);
+                break;
+        }
     }
 }

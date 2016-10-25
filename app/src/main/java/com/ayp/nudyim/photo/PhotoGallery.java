@@ -1,14 +1,20 @@
 package com.ayp.nudyim.photo;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +23,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -24,6 +32,7 @@ import android.widget.TextView;
 import com.ayp.nudyim.R;
 import com.ayp.nudyim.SignInActivity;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,6 +45,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -45,6 +55,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class PhotoGallery extends Fragment {
+
+    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 5555;
 
     public static class PhotoViewHolder extends RecyclerView.ViewHolder {
         public CircleImageView imageProfileUploader;
@@ -80,6 +92,13 @@ public class PhotoGallery extends Fragment {
 
     private RecyclerView mMessageRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
+    private ProgressBar mProgressBar;
+
+    InputStream inputStream;
+    private Bitmap saveBitmap;
+    String photoUrl;
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,6 +111,23 @@ public class PhotoGallery extends Fragment {
         View view = inflater.inflate(R.layout.photo_gallery, container, false);
         mStorage = FirebaseStorage.getInstance();
         KEY_CHILD = getArguments().getString("KEY_CHILD");
+
+
+
+        // get Writing WRITE_EXTERNAL_PERMISSION
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+            } else {
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+            }
+        }
+
 
         // New child entries
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
@@ -122,6 +158,7 @@ public class PhotoGallery extends Fragment {
         }
 
         // Initialize ProgressBar and RecyclerView.
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         mMessageRecyclerView = (RecyclerView) view.findViewById(R.id.messageRecyclerView);
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -135,11 +172,16 @@ public class PhotoGallery extends Fragment {
                 mFirebaseDatabaseReference.child(TRIP_CHILD).child(KEY_CHILD).child(PHOTO_CHILD)) {
 
             @Override
-            protected void populateViewHolder(PhotoViewHolder viewHolder, Photo model, int position) {
+            protected void populateViewHolder(final PhotoViewHolder viewHolder, Photo model, int position) {
+                final DatabaseReference mGetFireBaseReference = getRef(position);
+                photoUrl = model.getPhotoURL();
                 viewHolder.nameUploader.setText(model.getName());
                 Glide.with(getActivity())
                         .load(model.getImageProfile())
                         .into(viewHolder.imageShow);
+
+
+                viewHolder.imageShow.buildDrawingCache();
 
                 if (model.getPhotoURL() == null) {
                     viewHolder.imageProfileUploader
@@ -151,13 +193,46 @@ public class PhotoGallery extends Fragment {
                             .load(model.getPhotoURL())
                             .into(viewHolder.imageProfileUploader);
                 }
+
+
+                viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        final Dialog alertDialog = new Dialog(getActivity());
+                        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        alertDialog.setContentView(R.layout.dialog_click_photo);
+
+                        Button saveBtn = (Button) alertDialog.findViewById(R.id.save_photo);
+                        saveBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+//                                Bitmap bitMap = viewHolder.imageShow.getDrawingCache();
+                                Bitmap bitmap = ((GlideBitmapDrawable)viewHolder.imageShow.getDrawable()).getBitmap();
+                                MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), bitmap, "" , "");
+                                alertDialog.cancel();
+                            }
+                        });
+
+                        // set the custom dialog components - text, image and button
+                        Button deleteButton = (Button) alertDialog.findViewById(R.id.delete_photo);
+                        deleteButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mGetFireBaseReference.removeValue();
+                                alertDialog.cancel();
+                            }
+                        });
+                        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        alertDialog.show();
+
+                        return false;
+                    }
+                });
+
             }
         };
-
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
         mMessageRecyclerView.setAdapter(mFirebaseAdapter);
-
-
         return view;
     }
 
@@ -173,7 +248,6 @@ public class PhotoGallery extends Fragment {
         if (resultCode == Activity.RESULT_OK) {
             Log.d("PhotoGallery", "Result OK");
             Uri selectedImageUri = data.getData();
-            String selectedPath1 = selectedImageUri.toString();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri);
                 encodeBitmapAndSaveToFirebase(bitmap, selectedImageUri);
@@ -189,7 +263,7 @@ public class PhotoGallery extends Fragment {
         UUID uuid = UUID.randomUUID();
         String namePath  = uuid.toString() + ".jpg";
         // Create a storage reference from our app
-        StorageReference storageRef = mStorage.getReferenceFromUrl("gs://nudyim-9227e.appspot.com/");
+        StorageReference storageRef = mStorage.getReferenceFromUrl("gs://nudyim-9227e.appspot.com");
         StorageReference riversRef = storageRef.child("images/" + namePath);
 
         UploadTask uploadTask = riversRef.putFile(uri);
@@ -212,4 +286,22 @@ public class PhotoGallery extends Fragment {
         });
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
 }

@@ -18,5 +18,11 @@
     <color name="colorBlue">#6a56ff </color>
     <color name="colorOldGreen">#3d676e </color>
     <color name="colorBackgroundChat">#c0dee9 </color>
+    <color name="colorBackgroundBudget">#dbdbdb</color>
+    <color name="colorTrip1">#435e4b </color>
+    <color name="colorTrip2">#192e2f </color>
+    <color name="colorTrip3">#3a595e </color>
+    <color name="colorTrip4">#7ca8a9 </color>
+
 
 </resources>

@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#DCDCDC">
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/head_trip"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/header_trip">
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/trip_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
+        android:layout_below="@+id/head_trip"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Trip name" />
+            android:text="Trip name"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold"/>
 
         <EditText
             android:id="@+id/topic_trip"
@@ -26,127 +36,139 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
+        android:id="@+id/layout_grid"
         android:layout_below="@+id/trip_name"
-        android:background="#FFFFFF"
-        android:orientation="vertical">
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="2"
+        android:orientation="horizontal">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:padding="6dp"
-                android:src="@drawable/calendar_create" />
-
-            <TextView
-                android:id="@+id/start_date_view"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="5dp"
+            android:weightSum="2"
+            android:layout_weight="1">
+            <RelativeLayout
+                android:id="@+id/detail_layout"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
                 android:layout_weight="1"
-                android:background="#00000000"
-                android:gravity="center_vertical"
-                android:hint="Start date"
-                android:padding="6dp"
-                android:textSize="@dimen/activity_vertical_margin" />
-
-            <TextView
-                android:id="@+id/end_date_view"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:text="Detail"
+                android:layout_marginBottom="10dp"
+                android:background="@color/colorTrip1">
+                <TextView
+                    android:id="@+id/detail_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="@string/detail_text"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+                <ImageView
+                    android:id="@+id/image_detail"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_above="@id/detail_text"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:src="@drawable/detail_trip" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/date_layout"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
                 android:layout_weight="1"
-                android:background="#00000000"
-                android:gravity="center_vertical"
-                android:hint="End date"
-                android:padding="6dp"
-                android:textSize="@dimen/activity_vertical_margin" />
-
+                android:layout_marginBottom="10dp"
+                android:background="@color/colorTrip3">
+                <TextView
+                    android:id="@+id/date_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="DATE"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+                <ImageView
+                    android:id="@+id/image_date"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_above="@id/date_text"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/date_trip" />
+            </RelativeLayout>
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:padding="6dp"
-                android:src="@drawable/location_pin" />
-
-            <EditText
-                android:id="@+id/location_trip"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:weightSum="2"
+            android:layout_weight="1">
+            <RelativeLayout
+                android:id="@+id/location_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#00000000"
-                android:hint="Location"
-                android:padding="6dp" />
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:padding="6dp"
-                android:src="@drawable/edit" />
-
-            <EditText
-                android:id="@+id/detail_trip"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="10dp"
+                android:background="@color/colorTrip2">
+                <TextView
+                    android:id="@+id/location_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="LOCATION"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+                <ImageView
+                    android:id="@+id/image_schedule"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_above="@id/location_text"
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/location_trip" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/invite_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#00000000"
-                android:hint="Details"
-                android:padding="6dp" />
-
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="10dp"
+                android:background="@color/colorTrip4">
+                <TextView
+                    android:id="@+id/chat_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="INVITE"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+                <ImageView
+                    android:id="@+id/image_invite"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/invite_trip"
+                    />
+            </RelativeLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:padding="6dp"
-                android:src="@drawable/add_friend_create" />
-
-            <TextView
-                android:id="@+id/invite_trip"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#00000000"
-                android:hint="Invite friends"
-                android:textSize="18dp"
-                android:padding="6dp" />
-
-            <!--<AutoCompleteTextView -->
-                <!--android:hint="onepiecepura.cr@gmail.com"-->
-                <!--android:id="@+id/autocomplete_friend"-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:layout_height="wrap_content" />-->
-
-        </LinearLayout>
-
     </LinearLayout>
-
 </RelativeLayout>
+
+
