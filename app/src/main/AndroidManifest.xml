@@ -34,6 +34,7 @@
             </intent-filter>
         </activity>
 
+
         <activity
             android:name=".MainActivitySingle"
             android:configChanges="keyboardHidden|orientation"
@@ -41,21 +42,29 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
-        <activity android:name=".accept.AcceptFriendActivity">
+
+        <activity android:name=".accept.AcceptFriendActivity"
+            android:parentActivityName=".MainActivitySingle"
+            android:theme="@style/AppTheme.NoActionBar">
+
             <intent-filter>
-                <action android:name="OPEN_DETAIL_ACTIVITY" />
+                <action android:name="OPEN_ACCEPT_FRIEND" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".TripActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".SignInActivity" />
+
         <activity
             android:name=".trip.CreateTripActivity"
             android:parentActivityName=".MainActivitySingle" />
+
         <activity android:name=".trip.InviteFriendActivity" />
 
     </application>

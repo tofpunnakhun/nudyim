@@ -2,8 +2,11 @@ package com.ayp.nudyim.friend;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -16,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.ayp.nudyim.trip.CreateTripActivity;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +31,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ayp.nudyim.R;
 import com.ayp.nudyim.model.User;
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Scanner;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -36,6 +52,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ShowFriendFragment extends Fragment {
 
     public static final String TAG = "ShowFriendFragment";
+    private static final String AUTH_KEY = "key=AIzaSyBZTgjZdeldRh5RoAjnx8o2pa2Qk23fU7U";
 
     private DatabaseReference mDatabaseReference;
     private ValueEventListener mFriendListener;
@@ -49,6 +66,8 @@ public class ShowFriendFragment extends Fragment {
 
     private FloatingActionButton mAddFriendFAB;
     private EditText mAddEditText;
+
+    private boolean flag = true;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,13 +97,13 @@ public class ShowFriendFragment extends Fragment {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
                 alertDialog.setTitle("Add Friends");
                 View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_edittext, null);
-                mAddEditText = (EditText)view.findViewById(R.id.add_editText);
+                mAddEditText = (EditText) view.findViewById(R.id.add_editText);
                 alertDialog.setView(view);
                 alertDialog.setPositiveButton(android.R.string.ok,
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                               checkAddFriend();
+                                checkAddFriend();
                             }
                         });
 
@@ -104,62 +123,142 @@ public class ShowFriendFragment extends Fragment {
         return rootView;
     }
 
+    private void sendWithOtherThread(final String token, final String keyFriend) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                pushNotification(token, keyFriend);
+            }
+        }).start();
+    }
+
+    private void pushNotification(String token, String keyFriend) {
+
+        /**
+         * The registration token may change when:
+
+         The app deletes Instance ID
+         The app is restored on a new device
+         The user uninstalls/reinstall the app
+         The user clears app data.
+
+         */
+        Log.d(TAG, "Token: " + FirebaseInstanceId.getInstance().getToken());
+
+        JSONObject jPayload = new JSONObject();
+        JSONObject jNotification = new JSONObject();
+        JSONObject jData = new JSONObject();
+
+        try {
+            jNotification.put("title", "Friend Request");
+            jNotification.put("body", "Accept your request :D");
+            jNotification.put("sound", "default");
+            jNotification.put("badge", "1");
+            jNotification.put("content_available", "1");
+            jNotification.put("click_action", "OPEN_ACCEPT_FRIEND");
+
+            jData.put("picture_url", "https://fbi.dek-d.com/27/0378/7611/118707044");
+            jData.put("key_friend", keyFriend);
+            jData.put("key_myself", getUid());
+
+            jPayload.put("to", token);
+            jPayload.put("priority", "high");
+            jPayload.put("notification", jNotification);
+            jPayload.put("data", jData);
+
+            URL url = new URL("https://fcm.googleapis.com/fcm/send");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Authorization", AUTH_KEY);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setDoInput(true);
+
+            // send FCM message content.
+            OutputStream outputStream = conn.getOutputStream();
+            outputStream.write(jPayload.toString().getBytes());
+
+            InputStream inputStream = conn.getInputStream();
+            final String resp = convertStreamToString(inputStream);
+
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG, "" + resp);
+                }
+            });
+
+
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String convertStreamToString(InputStream is) {
+        Scanner s = new Scanner(is).useDelimiter("\\A");
+        return s.hasNext() ? s.next().replace(",", ",\n") : "";
+    }
+
     private void checkAddFriend() {
+        final View rootView = getActivity().findViewById(R.id.fragment_container);
         final String mEmail = mAddEditText.getText().toString();
 
-        ValueEventListener friendListener = new ValueEventListener() {
+//        ValueEventListener friendListener = new ValueEventListener() {
+        mDatabaseReference.child("user").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (final DataSnapshot friendSnapshot : dataSnapshot.getChildren()) {
                     User user = friendSnapshot.getValue(User.class);
+
                     if (user.getEmail().equals(mEmail)) {
 
-                        DatabaseReference dbrFriend = FirebaseDatabase.getInstance().getReference()
-                                .child("user").child(friendSnapshot.getKey());
-
-                        dbrFriend.addListenerForSingleValueEvent(new ValueEventListener() {
+                        mDatabaseReference.child("user").child(getUid()).child("friend").addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                User friendInfo = dataSnapshot.getValue(User.class);
-                                mDatabaseReference.child("user")
-                                        .child(getUid())
-                                        .child("friend")
-                                        .child(friendSnapshot.getKey())
-                                        .setValue(friendInfo);
+
+                                for (DataSnapshot checkSnapshot : dataSnapshot.getChildren()) {
+                                    if (friendSnapshot.getKey().equals(checkSnapshot.getKey())) {
+                                        Snackbar.make(rootView, "This email account already been exist", Snackbar.LENGTH_LONG).show();
+                                        flag = false;
+                                    }
+                                }
+
+                                if (flag) {
+                                    mDatabaseReference.child("user").child(friendSnapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            User userToken = dataSnapshot.getValue(User.class);
+                                            sendWithOtherThread(userToken.getToken(), friendSnapshot.getKey());
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                }
                             }
+
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
+
                             }
                         });
 
-                        DatabaseReference dbrUser = FirebaseDatabase.getInstance().getReference()
-                                .child("user").child(getUid());
-
-                        dbrUser.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                User userInfo = dataSnapshot.getValue(User.class);
-                                mDatabaseReference.child("user")
-                                        .child(friendSnapshot.getKey())
-                                        .child("friend")
-                                        .child(getUid())
-                                        .setValue(userInfo);
-                            }
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                            }
-                        });
+                    } else {
+                        Snackbar.make(rootView, "The email account does not exist.", Snackbar.LENGTH_LONG).show();
                     }
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Getting Post failed, log a message
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
             }
-        };
-        mDatabaseReference.child("user").addValueEventListener(friendListener);
-        mFriendListener = friendListener;
+        });
+//        mDatabaseReference.child("user").addValueEventListener(friendListener);
+//        mFriendListener = friendListener;
     }
 
     @Override
@@ -171,9 +270,9 @@ public class ShowFriendFragment extends Fragment {
     public void onStop() {
         super.onStop();
         // Remove post value event listener
-        if (mFriendListener != null) {
-            mDatabaseReference.removeEventListener(mFriendListener);
-        }
+//        if (mFriendListener != null) {
+//            mDatabaseReference.removeEventListener(mFriendListener);
+//        }
         // Clean up comments listener
 //        mAdapter.cleanupListener();
 
