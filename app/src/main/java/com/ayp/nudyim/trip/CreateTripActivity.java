@@ -196,7 +196,7 @@ public class CreateTripActivity extends AppCompatActivity implements View.OnClic
                 inviteFriendToDb(key);
 
                 // notification
-                sendWithOtherThread("tokens");
+//                sendWithOtherThread("tokens");
                 finish();
 
 //                getFragmentManager().popBackStack();

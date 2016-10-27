@@ -106,7 +106,6 @@ public class ShowFriendFragment extends Fragment {
                                 checkAddFriend();
                             }
                         });
-
                 alertDialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

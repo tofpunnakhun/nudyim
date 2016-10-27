@@ -177,14 +177,14 @@ public class DetailFragment extends Fragment {
             }
         });
 
-
-
         addFriendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Dialog alertDialog= new Dialog(getActivity());
-                alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//                alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 alertDialog.setContentView(R.layout.dialog_add_friend);
+                alertDialog.setCancelable(true);
+
                 final TextView okTextLocation = (TextView) alertDialog.findViewById(R.id.ok_text);
                 final TextView cancelTextLocation = (TextView) alertDialog.findViewById(R.id.cancel_text);
                 final AutoCompleteTextView editText=(AutoCompleteTextView)alertDialog.findViewById(R.id.autocomplete);
@@ -192,6 +192,7 @@ public class DetailFragment extends Fragment {
                 ArrayAdapter adapter = new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,friendEmail);
                 editText.setAdapter(adapter);
                 editText.setThreshold(1);
+
                 okTextLocation.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -206,7 +207,7 @@ public class DetailFragment extends Fragment {
                     }
                 });
 
-                alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//                alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 alertDialog.show();
 
             }
